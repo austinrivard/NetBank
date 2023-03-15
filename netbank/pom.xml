@@ -15,6 +15,10 @@
 	<description>CS160 group project</description>
 	<properties>
 		<java.version>17</java.version>
+		<frontend-src-dir>${project.basedir}/src/main/frontend</frontend-src-dir>
+		<frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
+		<node.version>v19.6.0</node.version>
+        <yarn.version>v1.22.19</yarn.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -68,6 +72,46 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+				<version>${frontend-maven-plugin.version}</version>
+                <configuration>
+                    <nodeVersion>${node.version}</nodeVersion>
+                    <yarnVersion>${yarn.version}</yarnVersion>
+                    <workingDirectory>${frontend-src-dir}</workingDirectory>
+                    <installDirectory>${project.build.directory}</installDirectory>
+					<buildPath>${basedir}/target/classes/static</buildPath>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>install-frontend-tools</id>
+                        <goals>
+                            <goal>install-node-and-yarn</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>yarn-install</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>build-frontend</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <arguments>build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 
