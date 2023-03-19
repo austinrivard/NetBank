@@ -22,13 +22,22 @@ public class ServiceController {
     }
 
     @PostMapping("/account")
-    public Account postAccount() {
-        Account account = Account.builder()
-                                 .name("austin")
-                                 .dollars(123)
-                                 .cents(55)
-                                 .build();
+    public Account postAccount(@RequestBody Account account) {
+        account.setDollars(0);
+        account.setCents(0);
         System.out.println("[POST: /api/account] Created account: " + account);
         return accountRepository.save(account);
     }
+
+    // @PostMapping("/addSampleAccount")
+    // public Account addSampleAccount() {
+    //     Account account = Account.builder()
+    //                              .name("Frank")
+    //                              .address("123 Main St")
+    //                              .dollars(123)
+    //                              .cents(55)
+    //                              .build();
+    //     System.out.println("[POST: /api/addSampleAccount] Created account: " + account);
+    //     return accountRepository.save(account);
+    // }
 }
