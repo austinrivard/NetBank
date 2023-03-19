@@ -17,5 +17,7 @@ public class Account {
 
     private Integer dollars;
 
+    private String address;
+
     private Integer cents;
 }
