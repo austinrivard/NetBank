@@ -10,14 +10,15 @@ import lombok.*;
 @AllArgsConstructor
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String name;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(length = 12)
+    private Integer accountNumber;
 
     private Integer dollars;
 
-    private String address;
-
     private Integer cents;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
