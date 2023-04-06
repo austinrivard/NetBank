@@ -14,6 +14,7 @@ public class ServiceController {
     @Autowired
     private AccountRepository accountRepository;
     
+    @GetMapping("/accounts")
     public List<Account> getAccounts() {
         List<Account> allAccounts = accountRepository.findAll();
         System.out.println("[GET: /api/accounts] Retrieved accounts: " + allAccounts);
