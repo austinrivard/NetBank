@@ -10,8 +10,6 @@ import edu.sjsu.cs160.team2.netbank.models.*;
 
 import java.util.Collections;
 
-import java.time.LocalDateTime;
-
 @RestController
 @RequestMapping("/api")
 public class ServiceController {
@@ -32,7 +30,7 @@ public class ServiceController {
         account.setDollars(0);
         account.setCents(0);
         System.out.println("[POST: /api/account] Created account: " + account);
-        transactionRepository.save(new Transaction(1,2,2,Transaction.TransactionType.DEPOSIT,LocalDateTime.now(),"Desc",0,0));
+        transactionRepository.save(new Transaction(1,2,2,Transaction.TransactionType.DEPOSIT,"4","Desc",0,0));
         return accountRepository.save(account);
     }
 
@@ -46,10 +44,7 @@ public class ServiceController {
         return transactionRepository.findAll();
     }
 
-    /*@PostMapping("/account/deposit")
-    public Transaction postDeposit(@RequestBody Transaction transaction){
-        
-    }*/
+    @PostMapping("")
 
 
 }
