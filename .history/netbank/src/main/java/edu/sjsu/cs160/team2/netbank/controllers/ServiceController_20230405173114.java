@@ -32,7 +32,7 @@ public class ServiceController {
         account.setDollars(0);
         account.setCents(0);
         System.out.println("[POST: /api/account] Created account: " + account);
-        transactionRepository.save(new Transaction(1,2,2,Transaction.TransactionType.DEPOSIT,LocalDateTime.now(),"Desc",0,0));
+        transactionRepository.save(new Transaction(1,2,2,Transaction.TransactionType.DEPOSIT,LocalDate.now(),"Desc",0,0));
         return accountRepository.save(account);
     }
 
