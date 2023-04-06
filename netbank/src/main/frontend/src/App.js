@@ -19,7 +19,7 @@ const StyledButton = styled.button`
     align-items: center;
     justifiy-content: center;
 `
-/*
+
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentForm,setCurrentForm] = useState('login');
@@ -49,19 +49,3 @@ export default function App() {
     </div>
   );
 }
-
-*/
-
-const location = {
-  address: '1600 Amphitheatre Parkway, Mountain View, california.',
-  lat: 37.42216,
-  lng: -122.08427,
-} 
-
-const App = () => (
-  <div className="App">
-    <demo-atm />
-  </div>
-)
-
-export default App
