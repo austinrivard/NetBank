@@ -1,41 +1,67 @@
-import logo from './logo.svg';
-import './App.css';
-import styled from 'styled-components';
-
 
 import { useState } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import styled, { css } from 'styled-components';
+import { LoginFrom } from './LoginForm';
+import { RegisterFrom } from './RegisterForm';
+import Home from './Navigation/Home';
+
 import AdminView from './admin/AdminView';
+import Navigation from './Navigation';
 
 const StyledButton = styled.button`
     border-radius: 5px;
     background-color: ${props => (props.primary ? '#F7A072' : '#a1cdf1')};
     color: #fff;
-    padding: 10px 15px;
-    outline: none;
-    border: none;
     cursor: pointer;
-    margin: 15px;
+    min-height: 5vh;
+    align-items: center;
+    justifiy-content: center;
 `
-
+/*
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [currentForm,setCurrentForm] = useState('login');
 
   function toggleLoggedIn() {
     setLoggedIn(!loggedIn);
   }
-
+  const toggleForm = (formName) => {
+    setCurrentForm(formName);
+  }
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <h1>NetBank</h1>
       </header>
       <main>
+        <div>
+          {currentForm === "login" ? <LoginFrom onFormSwitch = {toggleForm}/> : <RegisterFrom onFormSwitch={toggleForm}/>}
+        </div>
+        <div>
         <StyledButton onClick={toggleLoggedIn} {...loggedIn || {primary: true}}>
           {`Log ${loggedIn ? 'out' : 'in'}`}
         </StyledButton>
         {loggedIn && <AdminView />}
+        </div>
       </main>
     </div>
   );
 }
+
+*/
+
+const location = {
+  address: '1600 Amphitheatre Parkway, Mountain View, california.',
+  lat: 37.42216,
+  lng: -122.08427,
+} 
+
+const App = () => (
+  <div className="App">
+    <demo-atm />
+  </div>
+)
+
+export default App
