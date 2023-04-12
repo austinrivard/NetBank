@@ -38,7 +38,7 @@ public class ServiceController {
 
     @GetMapping("/account/transactions")
     public List<Transaction> getTransactions(@RequestBody Account account) {
-        return transactionRepository.findAllById(Collections.singletonList(account.getAccountNumber()));
+        return transactionRepository.findAllById(Collections.singletonList(account.get()));
     }
 
     @GetMapping("/transactions")
