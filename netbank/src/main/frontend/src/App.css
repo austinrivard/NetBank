@@ -1,16 +1,17 @@
-.App {
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+/* .App {
   text-align: center;
   display: flex;
   min-height: 100vh; 
   align-items: center;
   justify-content: center;
   background-color: rgb(170, 170, 170);
-}
-body{
+} */
+/* body{
   overflow-x: hidden;
-}
+} */
 
-.auth-form-container,.login-form,.register-form {
+/* .auth-form-container,.login-form,.register-form {
   display: flex;
   flex-direction: column;
   padding: 5rem;
@@ -59,4 +60,56 @@ button{
   border-radius: 5px;
   cursor: pointer;
   display:inline-block;
+} */
+/* .dashboard-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.dashboard-button {
+  width: 150px;
+} */
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f6f3;
+}
+button{
+  font-family: "Montserrat",sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #000000;
+  text-decoration: none;
+  width: 150px;
+  background-color: #ffffff; /* default background color */
+  transition: background-color 0.3s ease; /* transition effect */
+}
+
+button:hover {
+  background-color: #e9ba63; /* new background color on hover */
+}
+.dashboard-container{
+  justify-content: space-between;
+  flex-direction: column;
+}
+/* 
+ * Always set the map height explicitly to define the size of the div element
+ * that contains the map. 
+ */
+ #map {
+  height: 100%;
+}
+
+/* 
+ * Optional: Makes the sample page fill the window. 
+ */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
