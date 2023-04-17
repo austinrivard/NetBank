@@ -13,6 +13,9 @@ import edu.sjsu.cs160.team2.netbank.models.*;
 public class ServiceController {
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private UserRepository userRepository;
     
     @GetMapping("/accounts")
     public List<Account> getAccounts() {
@@ -21,13 +24,15 @@ public class ServiceController {
         return allAccounts;
     }
 
-    @PostMapping("/account")
-    public Account postAccount(@RequestBody Account account) {
-        account.setDollars(0);
-        account.setCents(0);
-        System.out.println("[POST: /api/account] Created account: " + account);
-        return accountRepository.save(account);
+    @PostMapping("/create-user")
+    public User postAccount(@RequestBody User user) {
+
+
+        
+        return userRepository.save(user);
     }
+
+    
 
     // @PostMapping("/addSampleAccount")
     // public Account addSampleAccount() {
