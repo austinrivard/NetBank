@@ -1,0 +1,35 @@
+.front-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #fcfcfc;
+}
+
+.front-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #0077b6;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.front-button:hover {
+  background-color: #023e8a;
+}
+
+@media screen and (max-width: 768px) {
+  .front-container {
+    flex-direction: column;
+  }
+
+  .front-button {
+    margin: 5px;
+  }
+}
