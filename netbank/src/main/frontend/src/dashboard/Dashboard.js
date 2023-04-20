@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './dashboard.css';
+import AccountSummary from '../AccountSummary/AccountSummary';
 
 const dashboardData = {
   accounts: [
@@ -103,6 +104,7 @@ const AccountDetails = ({ account }) => {
         <li>Number: {account.number}</li>
         <li>Balance: {account.balance}</li>
       </ul>
+      <AccountSummary account={account} />
     </div>
   );
 };

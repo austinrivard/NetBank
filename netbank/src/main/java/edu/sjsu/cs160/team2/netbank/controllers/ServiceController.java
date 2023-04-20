@@ -16,7 +16,11 @@ public class ServiceController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
     
+    // TODO: restrict to admins only or only retrieve user's accounts
     @GetMapping("/accounts")
     public List<Account> getAccounts() {
         List<Account> allAccounts = accountRepository.findAll();
@@ -24,25 +28,20 @@ public class ServiceController {
         return allAccounts;
     }
 
+    // TODO: restrict to admins only
     @PostMapping("/create-user")
-    public User postAccount(@RequestBody User user) {
-
-
-        
+    public User postUser(@RequestBody User user) {
         return userRepository.save(user);
     }
 
-    
+    @GetMapping("/account/{id}/transaction")
+    public List<Transaction> getTransactions(@PathVariable String id) {
+        return transactionRepository.findAllByAccountId(id);
+    }
 
-    // @PostMapping("/addSampleAccount")
-    // public Account addSampleAccount() {
-    //     Account account = Account.builder()
-    //                              .name("Frank")
-    //                              .address("123 Main St")
-    //                              .dollars(123)
-    //                              .cents(55)
-    //                              .build();
-    //     System.out.println("[POST: /api/addSampleAccount] Created account: " + account);
-    //     return accountRepository.save(account);
-    // }
+    @PostMapping("/account/{id}/transaction")
+    public Transaction postTransaction(@PathVariable String id, @RequestBody Transaction transaction) {
+        transaction.setAccount(accountRepository.findById(id).get());
+        return transactionRepository.save(transaction);
+    }
 }
