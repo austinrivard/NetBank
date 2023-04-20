@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import edu.sjsu.cs160.team2.netbank.models.Account;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Integer>  {    
+public interface AccountRepository extends JpaRepository<Account, String>  {    
 }
