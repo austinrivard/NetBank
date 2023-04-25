@@ -1,46 +1,49 @@
 import React, { useState } from 'react';
-import './open.css'
-function InputText(props) {
-  return (
-    <div className="form-group">
-      <label htmlFor={props.name}>{props.label}</label>
-      <input
-        id={props.name}
-        name={props.name}
-        type={props.type}
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-      />
-    </div>
-  );
-}
+import "./open.css"
 
-function Button(props) {
-  return (
-    <button type={props.type} className="btn" onClick={props.onClick}>
-      {props.label}
-    </button>
-  );
-}
+function OpenAccount() {
+  const [ssn, setSSN] = useState('');
+  const [selectedAccount, setSelectedAccount] = useState('');
 
-function OpenAccount(props) {
-  const [ssn, setSsn] = useState('');
-
-  const handleSsnChange = (value) => {
-    setSsn(value);
+  const handleSSNChange = (e) => {
+    setSSN(e.target.value);
   };
 
-  const handleOpenAccount = () => {
-    // handle opening the account here
+  const handleAccountChange = (e) => {
+    setSelectedAccount(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Here you can write the code to submit the form and open the account
   };
 
   return (
-    <div className="OpenAccount">
-      <h1>Open an Account</h1>
-      <div className="form">
-        <InputText label="Social Security Number" name="ssn" type="text" value={ssn} onChange={handleSsnChange} />
-        <Button label="Open Account" onClick={handleOpenAccount} />
-      </div>
+    <div className="open-container">
+      <h2>Open a New Account</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="open-form">
+          <label htmlFor="ssn">Social Security Number:</label>
+          <input
+            type="text"
+            id="ssn"
+            name="ssn"
+            value={ssn}
+            onChange={handleSSNChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="account-type">Select an account type:</label>
+          <select id="account-type" name="account-type" onChange={handleAccountChange} required>
+            <option value="">--Please select an account type--</option>
+            <option value="checking">Checking Account</option>
+            <option value="savings">Savings Account</option>
+            <option value="credit">Credit Card</option>
+          </select>
+        </div>
+        <button type="submit">Open Account</button>
+      </form>
     </div>
   );
 }

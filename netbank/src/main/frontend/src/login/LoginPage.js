@@ -10,10 +10,12 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <Input label="Username" name="username" />
-      <Input label="Password" type="password" name="password" />
-      <Button label="Login" onClick={handleClick} />
+    <div className="login">
+      <div className="login-container">
+        <Input label="Username" name="username" />
+        <Input label="Password" type="password" name="password" />
+        <Button label="Login" onClick={handleClick} />
+      </div>
     </div>
   );
 };

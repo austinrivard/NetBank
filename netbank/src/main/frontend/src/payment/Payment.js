@@ -1,47 +1,61 @@
-
 import React, { useState } from 'react';
-import './payment.css'
+import './payment.css';
 function PaymentPage() {
-  const [recipientRoutingNumber, setRecipientRoutingNumber] = useState('');
-  const [recipientAccountNumber, setRecipientAccountNumber] = useState('');
-  const [amount, setAmount] = useState(0);
+  const [transactionType, setTransactionType] = useState('withdraw');
+  const [amount, setAmount] = useState('');
+  const [recipient, setRecipient] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+
+  const handleTransactionTypeChange = (e) => {
+    setTransactionType(e.target.value);
+  };
+
+  const handleAmountChange = (e) => {
+    setAmount(e.target.value);
+  };
+
+  const handleRecipientChange = (e) => {
+    setRecipient(e.target.value);
+  };
+
+  const handleAccountNumberChange = (e) => {
+    setAccountNumber(e.target.value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle payment submission logic here
+    // Handle form submission
   };
+
   return (
     <div className="payment-page">
       <h1>Make a Payment</h1>
-      <form onSubmit={handleSubmit} className="payment-form">
-        <label htmlFor="recipient-routing-number">Recipient Routing Number:</label>
-        <input
-          id="recipient-routing-number"
-          type="text"
-          pattern="\d{9}"
-          value={recipientRoutingNumber}
-          onChange={(e) => setRecipientRoutingNumber(e.target.value)}
-          required
-        />
-        <label htmlFor="recipient-account-number">Recipient Account Number:</label>
-        <input
-          id="recipient-account-number"
-          type="text"
-          pattern="\d{10}"
-          value={recipientAccountNumber}
-          onChange={(e) => setRecipientAccountNumber(e.target.value)}
-          required
-        />
-        <label htmlFor="amount">Amount:</label>
-        <input
-          id="amount"
-          type="number"
-          min="0.01"
-          step="0.01"
-          value={amount}
-          onChange={(e) => setAmount(parseFloat(e.target.value))}
-          required
-        />
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="transaction-type">Transaction Type:</label>
+          <select id="transaction-type" value={transactionType} onChange={handleTransactionTypeChange}>
+            <option value="withdraw">Withdraw</option>
+            <option value="deposit">Deposit</option>
+            <option value="transfer">Transfer</option>
+            <option value="pay">Pay</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="amount">Amount:</label>
+          <input type="text" id="amount" value={amount} onChange={handleAmountChange} />
+        </div>
+        {transactionType === 'transfer' || transactionType === 'pay' ? (
+          <div>
+            <label htmlFor="recipient">Recipient:</label>
+            <input type="text" id="recipient" value={recipient} onChange={handleRecipientChange} />
+          </div>
+        ) : null}
+        {transactionType === 'transfer' ? (
+          <div>
+            <label htmlFor="account-number">Account Number:</label>
+            <input type="text" id="account-number" value={accountNumber} onChange={handleAccountNumberChange} />
+          </div>
+        ) : null}
         <button type="submit">Submit</button>
       </form>
     </div>
