@@ -1,58 +1,68 @@
-.OpenAccount {
+.open-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  justify-content: center;
+  height: 100vh;
+  background-color: #1f1f1f;
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
 }
 
-.OpenAccount h1 {
-  font-size: 36px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #383838;
-}
-
-.OpenAccount .form {
+/* Form */
+.open-form {
   display: flex;
   flex-direction: column;
-  width: 400px;
-}
-
-.OpenAccount .form .form-group {
-  display: flex;
-  flex-direction: column;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-.OpenAccount .form .form-group label {
+.open-form label {
   font-size: 18px;
   margin-bottom: 10px;
-  color: #383838;
 }
 
-.OpenAccount .form .form-group input {
-  font-size: 16px;
+.open-form input[type="text"] {
+  width: 100%;
   padding: 10px;
+  margin-bottom: 20px;
   border-radius: 5px;
-  border: 1px solid #d8d8d8;
-}
-
-.OpenAccount .form .form-group input:focus {
-  outline: none;
-  border: 2px solid #565656;
-}
-
-.OpenAccount .form .btn {
-  background-color: #008cba;
+  border: none;
+  background-color: #383838;
   color: #fff;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 16px;
+}
+
+.open-form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #383838;
+  color: #fff;
+  font-size: 16px;
+}
+
+.open-container button[type="submit"] {
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  padding: 10px 20px;
+  background-color: #f68834;
+  color: #fff;
+  font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.OpenAccount .form .btn:hover {
-  background-color: #005f6b;
+.open-container button[type="submit"]:hover {
+  background-color: #da4e4e;
+}
+
+/* Headings */
+.open-container h2 {
+  margin-bottom: 20px;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
 }

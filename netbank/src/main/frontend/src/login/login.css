@@ -1,42 +1,52 @@
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('https://cdn.discordapp.com/attachments/461741755407138818/1099592370217046057/image.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 50px;
+  border-radius: 10px;
 }
 
 .input-container {
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
 }
 
-label {
-  display: block;
+.input-container label {
+  color: #fff;
   margin-bottom: 5px;
-  font-weight: bold;
+  font-size: 16px;
 }
 
-input[type='text'],
-input[type='password'] {
-  width: 100%;
+.input-container input {
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: none;
+  font-size: 16px;
 }
 
-button.button {
-  padding: 10px 20px;
-  background-color: #007bff;
+.login-container button {
+  background-color: #f44336;
   color: #fff;
   border: none;
   border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
   cursor: pointer;
 }
 
-button.button:hover {
-  background-color: #0069d9;
-}
-
-span {
-  font-size: 16px;
-  font-weight: bold;
+.button:hover {
+  background-color: #e53935;
 }
