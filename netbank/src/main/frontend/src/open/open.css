@@ -1,0 +1,58 @@
+.OpenAccount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.OpenAccount h1 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #383838;
+}
+
+.OpenAccount .form {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+
+.OpenAccount .form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.OpenAccount .form .form-group label {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #383838;
+}
+
+.OpenAccount .form .form-group input {
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #d8d8d8;
+}
+
+.OpenAccount .form .form-group input:focus {
+  outline: none;
+  border: 2px solid #565656;
+}
+
+.OpenAccount .form .btn {
+  background-color: #008cba;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.OpenAccount .form .btn:hover {
+  background-color: #005f6b;
+}

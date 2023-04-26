@@ -12,7 +12,7 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(length = 12)
-    private Integer accountNumber;
+    private String id;
 
     private Integer dollars;
 
