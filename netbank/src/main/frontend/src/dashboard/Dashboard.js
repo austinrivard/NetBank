@@ -37,7 +37,7 @@ const Dashboard = () => {
   };
 
   const handlePaymentsClick = () => {
-    navigate('/dashboard/pay');
+    navigate('/dashboard/payments');
   };
 
   const handleTransactionsClick = () => {
@@ -57,7 +57,7 @@ const Dashboard = () => {
       <nav className="navigation">
         <ul className="horizontal">
           <li>
-            <button onClick={handlePaymentsClick}>Pay</button>
+            <button onClick={handlePaymentsClick}>Payments</button>
           </li>
           <li>
             <button onClick={handleTransactionsClick}>
@@ -70,27 +70,40 @@ const Dashboard = () => {
           <li>
             <button onClick={handleNewAccountClick}>Open Account</button>
           </li>
+          <li>
+            <button onClick={handlePaymentsClick}>Maps</button>
+          </li>
         </ul>
       </nav>
-      <AccountList
-        accounts={dashboardData.accounts}
-        onSelect={handleAccountSelect}
-      />
-      <AccountDetails account={selectedAccount} />
+      <div className="account-container">
+        <AccountList
+          accounts={dashboardData.accounts}
+          selectedAccount={selectedAccount}
+          onSelect={handleAccountSelect}
+        />
+        <AccountDetails account={selectedAccount} />
+      </div>
     </div>
   );
 };
 
-const AccountList = ({ accounts, onSelect }) => {
+const AccountList = ({ accounts, selectedAccount, onSelect }) => {
   return (
-    <div className="account-list">
-      <h2>Accounts</h2>
-      <List
-        items={accounts}
-        renderItem={(account) => (
-          <ListItem key={account.id} item={account} onSelect={onSelect} />
-        )}
-      />
+    <div className="account-box">
+      <ul>
+        {accounts.map((account) => (
+          <li key={account.id}>
+            <button
+              className={`account-button ${
+                account.id === selectedAccount.id ? 'selected' : ''
+              }`}
+              onClick={() => onSelect(account)}
+            >
+              {account.name}
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
@@ -104,26 +117,10 @@ const AccountDetails = ({ account }) => {
         <li>Number: {account.number}</li>
         <li>Balance: {account.balance}</li>
       </ul>
-      <AccountSummary account={account} />
+      <div className="account-summary-box">
+        <AccountSummary account={account} />
+      </div>
     </div>
-  );
-};
-
-const List = ({ items, renderItem }) => {
-  return (
-    <ul>
-      {items.map((item) => (
-        <li key={item.id}>{renderItem(item)}</li>
-      ))}
-    </ul>
-  );
-};
-
-const ListItem = ({ item, onSelect }) => {
-  return (
-    <button className="list-item" onClick={() => onSelect(item)}>
-      {item.label}
-    </button>
   );
 };
 

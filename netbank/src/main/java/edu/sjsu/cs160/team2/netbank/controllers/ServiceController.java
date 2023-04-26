@@ -21,15 +21,25 @@ public class ServiceController {
     private TransactionRepository transactionRepository;
     
     // TODO: restrict to admins only or only retrieve user's accounts
-    @GetMapping("/accounts")
+    @GetMapping("/account")
     public List<Account> getAccounts() {
         List<Account> allAccounts = accountRepository.findAll();
         System.out.println("[GET: /api/accounts] Retrieved accounts: " + allAccounts);
         return allAccounts;
     }
 
+    @PostMapping("/account")
+    public Account postAccount(@RequestBody Account account) {
+        return accountRepository.save(account);
+    }
+
+    @GetMapping("/user")
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
     // TODO: restrict to admins only
-    @PostMapping("/create-user")
+    @PostMapping("/user")
     public User postUser(@RequestBody User user) {
         return userRepository.save(user);
     }
