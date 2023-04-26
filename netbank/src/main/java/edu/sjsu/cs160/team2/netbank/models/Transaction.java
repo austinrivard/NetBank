@@ -3,8 +3,8 @@ package edu.sjsu.cs160.team2.netbank.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
+import java.math.BigDecimal;
+import java.sql.Date;
 
 @Entity
 @Data
@@ -13,27 +13,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    public enum TransactionType {
-        DEPOSIT,
-        WITHDRAWAL,
-        TRANSFER
-    }
-
-    private Integer userID;
-
-    private Integer targetID; //For transfers only
-
-    private TransactionType type;
-
-    private LocalDateTime datetime;
+    private String type;
 
     private String description;
 
-    private Integer dollars;
+    private Date date;
 
-    private Integer cents;
+    private BigDecimal amount;
 
+    private BigDecimal balance;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 }

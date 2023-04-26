@@ -1,4 +1,6 @@
 env.properties
+node_modules
+.DS_Store
 
 HELP.md
 target/
