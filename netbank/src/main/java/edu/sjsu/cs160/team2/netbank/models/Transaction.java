@@ -16,9 +16,9 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String type;
+    private String type; //deposit or withdraw 
 
-    private String description;
+    private String description; 
 
     private Date date;
 
@@ -27,6 +27,6 @@ public class Transaction {
     private BigDecimal balance;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_number")
     private Account account;
 }

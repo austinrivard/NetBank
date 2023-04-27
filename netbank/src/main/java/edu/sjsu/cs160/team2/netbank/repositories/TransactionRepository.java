@@ -9,5 +9,5 @@ import edu.sjsu.cs160.team2.netbank.models.Transaction;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Integer>  {    
-    public List<Transaction> findAllByAccountId(String accountId);
+    public List<Transaction> findAllByAccountNumber(String accountNumber);
 }
