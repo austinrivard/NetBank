@@ -16,9 +16,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String type; //deposit, withdraw, transfer
-
-    private Integer targetId; //For transfers only
+    private String type; //deposit or withdraw 
 
     private String description; 
 
