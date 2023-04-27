@@ -28,7 +28,7 @@ public class ServiceController {
         System.out.println("[GET: /api/accounts] Retrieved accounts: " + allAccounts);
         return allAccounts;
     }
-
+    
     @PostMapping("/account")
     public Account postAccount(@RequestBody Account account) {
         User lookupUser = userRepository.findById(account.getUser().getId()).get();
