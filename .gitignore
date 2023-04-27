@@ -2,7 +2,6 @@ env.properties
 node_modules
 .DS_Store
 adminsdk.json
-.history/
 
 HELP.md
 target/
