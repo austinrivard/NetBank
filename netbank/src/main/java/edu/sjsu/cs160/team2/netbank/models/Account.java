@@ -1,7 +1,14 @@
 package edu.sjsu.cs160.team2.netbank.models;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.Builder.Default;
 
 @Entity
 @Data
@@ -10,13 +17,17 @@ import lombok.*;
 @AllArgsConstructor
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(length = 12)
-    private String id;
+    @GenericGenerator(name = "account_number", strategy = "edu.sjsu.cs160.team2.netbank.util.AccountNumberGenerator")
+    @GeneratedValue(generator = "account_number")  
+    @Column(length = 9)
+    @Nullable
+    private String number; // generates a random 9 digit string of numbers
 
-    private Integer dollars;
+    @Default
+    private String routingNumber = "420420420";
 
-    private Integer cents;
+    @Default
+    private BigDecimal balance = new BigDecimal(0.0);
 
     @ManyToOne
     @JoinColumn(name = "user_id")
