@@ -1,7 +1,7 @@
 env.properties
 node_modules
 .DS_Store
-adminsdk.json
+adminsdk.jar
 
 HELP.md
 target/

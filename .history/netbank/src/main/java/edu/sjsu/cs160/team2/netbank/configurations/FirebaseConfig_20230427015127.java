@@ -14,6 +14,8 @@ import com.google.firebase.FirebaseOptions;
 @Configuration
 public class FirebaseConfig {
 
+
+    
     @PostConstruct
     public void initialize() throws IOException {
         FileInputStream serviceAccount = new FileInputStream("src/main/resources/adminsdk.json");
