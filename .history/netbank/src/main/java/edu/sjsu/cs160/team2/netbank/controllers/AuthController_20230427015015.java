@@ -33,7 +33,7 @@ public class AuthController {
             //Verify if user ID found in Firebase still exists in Azure
             userRepository.findById(uid).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            //Return HTTP response with status code 200, response body is user ID
+            //Return HTTP response with status code 200, and response body is UID
             return ResponseEntity.ok(uid);
 
         } catch (FirebaseAuthException | IllegalArgumentException | UsernameNotFoundException e) {
