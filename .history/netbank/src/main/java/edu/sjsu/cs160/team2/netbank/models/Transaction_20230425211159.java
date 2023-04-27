@@ -16,7 +16,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private Integer targetId; //For transfers only
+    private Integer targetId;
 
     private String type;
 
