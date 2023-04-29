@@ -37,14 +37,16 @@ public class AccountController {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public Transaction executeTransfer(Account fromAccount, Account toAccount, BigDecimal amount) {
+    public Transaction executeTransfer(Account fromAccount, Account toAccount, BigDecimal amount, String description) {
         Transaction fromTransaction = updateBalance(fromAccount, amount.negate());
         Transaction toTransaction   = updateBalance(toAccount, amount);
 
-        fromTransaction.setDescription("Transfer to " + toAccount.getNumber().substring(5));
+        // fromTransaction.setDescription("Transfer to " + toAccount.getNumber().substring(5));
+        fromTransaction.setDescription(description);
         fromTransaction.setTransferAccountNumber(toAccount.getNumber());
 
-        toTransaction.setDescription("Transfer from " + fromAccount.getNumber().substring(5));
+        // toTransaction.setDescription("Transfer from " + fromAccount.getNumber().substring(5));
+        toTransaction.setDescription(description);
         toTransaction.setTransferAccountNumber(fromAccount.getNumber());
         
         transactionRepository.save(fromTransaction);

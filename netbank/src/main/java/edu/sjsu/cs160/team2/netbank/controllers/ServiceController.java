@@ -70,11 +70,32 @@ public class ServiceController {
 
     @PostMapping("/processTransfer")
     public Transaction processTransfer(@RequestBody TransferArgs transferArgs) {
-        Account fromAccount = accountRepository.findById(transferArgs.fromAccount.getNumber()).get();
-        Account toAccount = accountRepository.findById(transferArgs.toAccount.getNumber()).get();
-        BigDecimal amount = transferArgs.amount;
+        if (!transferArgs.fromAccount.getRoutingNumber().equals("420420420")
+            && !transferArgs.toAccount.getRoutingNumber().equals("420420420")) {
+            throw new IllegalArgumentException("Neither routing number is ours");
+        }
 
-        return accountController.executeTransfer(fromAccount, toAccount, amount);
+        Transaction transaction;
+
+        if (transferArgs.fromAccount.getRoutingNumber().equals("420420420")) {
+            Account fromAccount = accountRepository.findById(transferArgs.fromAccount.getNumber()).get();
+
+            if (transferArgs.toAccount.getRoutingNumber().equals("420420420")) {
+                // internal transfer
+                Account toAccount = accountRepository.findById(transferArgs.toAccount.getNumber()).get();
+                transaction = accountController.executeTransfer(fromAccount, toAccount, transferArgs.amount, transferArgs.description);
+            } else {
+                // transfer from internal account to external account
+                transaction = accountController.updateBalance(fromAccount, transferArgs.amount.negate());
+            }
+        } else {
+            // transfer from external account to internal account
+            Account toAccount = accountRepository.findById(transferArgs.toAccount.getNumber()).get();
+            transaction = accountController.updateBalance(toAccount, transferArgs.amount);
+        }
+
+        transaction.setDescription(transferArgs.description);
+        return transactionRepository.save(transaction);
     }
 
     @PostMapping(path="/depositCheck", consumes={"multipart/form-data"})

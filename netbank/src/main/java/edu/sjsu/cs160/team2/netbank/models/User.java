@@ -15,6 +15,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    private String ssn;
+
     private String firstName;
 
     @Nullable
