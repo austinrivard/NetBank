@@ -1,12 +1,16 @@
 package edu.sjsu.cs160.team2.netbank.controllers;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import edu.sjsu.cs160.team2.netbank.repositories.*;
+import edu.sjsu.cs160.team2.netbank.util.TransferArgs;
 import edu.sjsu.cs160.team2.netbank.models.*;
 
 @RestController
@@ -20,6 +24,12 @@ public class ServiceController {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Autowired
+    private AccountController accountController;
+
+    @Autowired
+    private CheckRecordRepository checkRecordRepository;
     
     // TODO: restrict to admins only or only retrieve user's accounts
     @GetMapping("/account")
@@ -59,11 +69,48 @@ public class ServiceController {
     }
 
     @PostMapping("/processTransfer")
-    public Account processTransfer(@RequestBody Account fromAccount, @RequestBody Account toAccount, @RequestBody BigDecimal amount) {
-        System.out.println("Processing transfer"); // TODO
-        System.out.println(fromAccount);
-        System.out.println(toAccount);
-        System.out.println(amount);
-        return toAccount;
+    public Transaction processTransfer(@RequestBody TransferArgs transferArgs) {
+        Account fromAccount = accountRepository.findById(transferArgs.fromAccount.getNumber()).get();
+        Account toAccount = accountRepository.findById(transferArgs.toAccount.getNumber()).get();
+        BigDecimal amount = transferArgs.amount;
+
+        return accountController.executeTransfer(fromAccount, toAccount, amount);
+    }
+
+    @PostMapping(path="/depositCheck", consumes={"multipart/form-data"})
+    public Transaction depositCheck(
+        @RequestPart("account") Account account,
+        @RequestPart("amount") BigDecimal amount,
+        @RequestPart("date") LocalDate date,
+        @RequestPart("imageFront") MultipartFile imageFront,
+        @RequestPart("imageBack") MultipartFile imageBack
+    ) throws IOException {
+        if (amount.compareTo(BigDecimal.ZERO) != 1) throw new IllegalArgumentException("Amount must be non-negative");
+        
+        account = accountRepository.findById(account.getNumber()).get();
+
+        Transaction transaction = accountController.updateBalance(account, amount);
+        transaction.setDescription("Mobile Check Deposit");
+        transaction.setDate(date);
+
+        CheckRecord checkRecord = CheckRecord
+            .builder()
+            .transaction(transaction)
+            .imageFront(imageFront.getBytes())
+            .imageBack(imageBack.getBytes())
+            .build();
+        checkRecordRepository.save(checkRecord); // save image data
+
+        return transactionRepository.save(transaction);
+    }
+
+    @GetMapping(path="/checkRecord/{transactionId}/front", produces="image/jpg")
+    public byte[] getCheckImageFront(@PathVariable("transactionId") int transactionId) {
+        return checkRecordRepository.findByTransactionId(transactionId).get().getImageFront();
+    }
+
+    @GetMapping(path="/checkRecord/{transactionId}/back", produces="image/jpg")
+    public byte[] getCheckImageBack(@PathVariable("transactionId") int transactionId) {
+        return checkRecordRepository.findByTransactionId(transactionId).get().getImageBack();
     }
 }
