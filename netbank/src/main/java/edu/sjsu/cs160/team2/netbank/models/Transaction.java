@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -16,13 +16,13 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String type; //deposit, withdraw, transfer
+    private String type; //deposit, withdraw
 
-    private Integer targetId; //For transfers only
+    private String transferAccountNumber; //For transfers only, otherwise null
 
     private String description; 
 
-    private Date date;
+    private LocalDate date;
 
     private BigDecimal amount;
 
