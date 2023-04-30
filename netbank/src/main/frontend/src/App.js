@@ -10,6 +10,7 @@ import Transaction from './transaction/Transaction';
 import Statement from './statement/Statement';
 import Open from './open/Open';
 
+
 import './index.css';
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/dashboard/transactions" element={<Transaction />} />
         <Route path="/dashboard/statements" element={<Statement />} />
         <Route path="/dashboard/new-account" element={<Open />} />
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
