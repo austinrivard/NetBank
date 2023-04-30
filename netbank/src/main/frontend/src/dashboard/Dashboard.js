@@ -44,10 +44,6 @@ const Dashboard = () => {
     navigate('/dashboard/transactions');
   };
 
-  const handleStatementsClick = () => {
-    navigate('/dashboard/statements');
-  };
-
   const handleNewAccountClick = () => {
     navigate('/dashboard/new-account');
   };
@@ -63,9 +59,6 @@ const Dashboard = () => {
             <button onClick={handleTransactionsClick}>
               Transaction History
             </button>
-          </li>
-          <li>
-            <button onClick={handleStatementsClick}>Statements</button>
           </li>
           <li>
             <button onClick={handleNewAccountClick}>Open Account</button>
@@ -109,23 +102,48 @@ const AccountList = ({ accounts, selectedAccount, onSelect }) => {
 };
 
 const AccountDetails = ({ account }) => {
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const handleConfirmationClick = () => {
+    setShowConfirmation(true);
+  };
+
+  const handleCancelClick = () => {
+    setShowConfirmation(false);
+  };
+
+  const handleCloseClick = () => {
+    // TODO: handle account closure
+    setShowConfirmation(false);
+  };
+
   return (
     <div className="account-details">
       <h2>Account Details</h2>
-      <ul>
-        <li>Name: {account.name}</li>
-        <li>Number: {account.number}</li>
-        <li>Balance: {account.balance}</li>
-      </ul>
-      <div className="account-summary-box">
-        <AccountSummary account={account} />
+      <div className="account-info">
+        <ul>
+          <li><strong>Account Name:</strong> {account.name}</li>
+          <li><strong>Account Number:</strong> {account.number}</li>
+          <li><strong>Balance</strong>{account.balance}</li>
+        </ul>
       </div>
+
+      {showConfirmation ? (
+        <div className="confirmation-container">
+          <p>Are you sure you want to close this account?</p>
+          <div className="button-container">
+            <button onClick={handleCloseClick}>Yes</button>
+            <button onClick={handleCancelClick}>No</button>
+          </div>
+        </div>
+      ) : (
+        <div className="button-container">
+          <button onClick={handleConfirmationClick}>Close Account</button>
+        </div>
+      )}
     </div>
   );
 };
 
-const Text = ({ value }) => {
-  return <p className="text">{value}</p>;
-};
 
 export default Dashboard;

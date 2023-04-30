@@ -23,7 +23,7 @@ function OpenAccount() {
       <h2>Open a New Account</h2>
       <form onSubmit={handleSubmit}>
         <div className="open-form">
-          <label htmlFor="ssn">Social Security Number:</label>
+          <label htmlFor="ssn">Enter Account Name:</label>
           <input
             type="text"
             id="ssn"

@@ -30,7 +30,7 @@ function Register() {
   };
 
   return (
-    <div className="container">
+    <div className="reg-container">
       <div className="register">
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="form-group">
