@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +16,7 @@ import edu.sjsu.cs160.team2.netbank.models.*;
 
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("isAuthenticated()")
 public class ServiceController {
     @Autowired
     private AccountRepository accountRepository;
@@ -31,8 +33,8 @@ public class ServiceController {
     @Autowired
     private CheckRecordRepository checkRecordRepository;
     
-    // TODO: restrict to admins only or only retrieve user's accounts
-    @GetMapping("/account")
+    @PreAuthorize("hasAuthority('admin')")
+    @GetMapping("/accounts")
     public List<Account> getAccounts() {
         List<Account> allAccounts = accountRepository.findAll();
         System.out.println("[GET: /api/accounts] Retrieved accounts: " + allAccounts);
@@ -46,12 +48,18 @@ public class ServiceController {
         return accountRepository.save(account);
     }
 
-    @GetMapping("/user")
+    @PreAuthorize("hasAuthority('admin')")
+    @GetMapping("/users")
     public List<User> getUsers() {
         return userRepository.findAll();
     }
 
-    // TODO: restrict to admins only
+    @GetMapping("/user")
+    public List<User> getUser() {
+        
+        return userRepository.findAll();
+    }
+
     @PostMapping("/user")
     public User postUser(@RequestBody User user) {
         return userRepository.save(user);
@@ -134,4 +142,5 @@ public class ServiceController {
     public byte[] getCheckImageBack(@PathVariable("transactionId") int transactionId) {
         return checkRecordRepository.findByTransactionId(transactionId).get().getImageBack();
     }
+
 }
