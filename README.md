@@ -33,4 +33,4 @@ recommended to install [React Developer Tools](https://react.dev/learn/react-dev
 this adds a React Components tab to the dev tools in your browser and allows state viewing/editing
 
 # How to view API documentation
-With the app running, open http://localhost:8080/swagger-ui.html
+With the app running, open http://localhost:8080/swagger-ui.html# google-maps
