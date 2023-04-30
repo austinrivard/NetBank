@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './register.css';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
 function Register() {
   const navigate = useNavigate();
@@ -26,7 +27,16 @@ function Register() {
     event.preventDefault();
     // perform registration logic here, e.g. sending the form data to a server
     // if registration is successful, redirect to the dashboard
-    navigate('/dashboard');
+
+    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        const uid = userCredential.user.uid;
+        
+        navigate('/dashboard');
+      })
+      .catch((error) => console.log);
   };
 
   return (
