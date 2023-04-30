@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,9 +56,9 @@ public class ServiceController {
     }
 
     @GetMapping("/user")
-    public List<User> getUser() {
-        
-        return userRepository.findAll();
+    public User getUser() {
+        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findById(uid).get();
     }
 
     @PostMapping("/user")
