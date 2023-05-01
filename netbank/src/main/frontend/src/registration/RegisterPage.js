@@ -8,9 +8,11 @@ function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
-    middleName: '',
     lastName: '',
-    address: '',
+    street: '',
+    city: '',
+    state: '',
+    zipcode: '',
     email: '',
     phoneNumber: '',
     ssn: '',
@@ -56,16 +58,6 @@ function Register() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="middleName">Middle Name:</label>
-            <input
-              type="text"
-              id="middleName"
-              name="middleName"
-              value={formData.middleName}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="form-group">
             <label htmlFor="lastName">Last Name:</label>
             <input
               type="text"
@@ -77,14 +69,43 @@ function Register() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="address">Address:</label>
+            <label htmlFor="street">Street Address:</label>
             <input
               type="text"
-              id="address"
-              name="address"
-              value={formData.address}
+              id="street"
+              name="street"
+              value={formData.street}
               onChange={handleInputChange}
-              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="city">City:</label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="middleName">State:</label>
+            <input
+              type="text"
+              id="state"
+              name="state"
+              value={formData.state}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="zipcode">Zip Code:</label>
+            <input
+              type="text"
+              id="zipcode"
+              name="zipcode"
+              value={formData.middleName}
+              onChange={handleInputChange}
             />
           </div>
           <div className="form-group">

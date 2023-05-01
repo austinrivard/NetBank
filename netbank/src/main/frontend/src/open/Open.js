@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import "./open.css"
 
 function OpenAccount() {
-  const [ssn, setSSN] = useState('');
+  const [name, setName] = useState('');
   const [selectedAccount, setSelectedAccount] = useState('');
 
-  const handleSSNChange = (e) => {
-    setSSN(e.target.value);
+  const handleNameChange = (e) => {
+    setName(e.target.value);
   };
 
   const handleAccountChange = (e) => {
@@ -23,13 +23,13 @@ function OpenAccount() {
       <h2>Open a New Account</h2>
       <form onSubmit={handleSubmit}>
         <div className="open-form">
-          <label htmlFor="ssn">Enter Account Name:</label>
+          <label htmlFor="name">Enter Account Name:</label>
           <input
             type="text"
-            id="ssn"
-            name="ssn"
-            value={ssn}
-            onChange={handleSSNChange}
+            id="name"
+            name="name"
+            value={name}
+            onChange={handleNameChange}
             required
           />
         </div>
