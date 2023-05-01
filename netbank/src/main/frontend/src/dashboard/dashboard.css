@@ -12,6 +12,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-radius: 8px;
   background-color: #333;
   padding: 1rem;
 }
@@ -69,6 +70,7 @@
 .account-button {
   background-color: transparent;
   border: none;
+  border-radius: 5px;
   color: #ffffff;
   cursor: pointer;
   display: block;
@@ -86,11 +88,10 @@
 }
 
 .account-details {
-  background-color: #252525;
+  background-color: #333333;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  flex-basis: 70%;
-  overflow-y: auto;
+  flex-basis: 40%;
   padding: 20px;
 }
 
@@ -103,6 +104,52 @@
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+.account-details li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.account-details li:last-child {
+  border-bottom: none;
+}
+
+.account-details .label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.account-details .value {
+  font-size: 1.2rem;
+}
+
+.account-details .button-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.account-details button {
+  background-color: #d9534f;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  padding: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.account-details button:hover {
+  background-color: #c9302c;
+  opacity: 0.8;
+}
+
+.confirmation-container p {
+  align-self: center;
 }
 
 .account-summary-box {
