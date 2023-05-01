@@ -2,6 +2,7 @@ env.properties
 node_modules
 .DS_Store
 adminsdk.json
+env.local
 
 HELP.md
 target/
