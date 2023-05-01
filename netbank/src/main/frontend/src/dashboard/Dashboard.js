@@ -154,7 +154,7 @@ const AccountDetails = ({ account, onDeleted }) => {
     await fetch(`/api/account`, {
       method: 'DELETE',
       headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
-      body: `{"number": ${account.number}}`
+      body: `{"number": "${account.number}"}`
     }).then(response => response.json()
     ).then(data => {
       console.log('deleteAccount response: ', data);
