@@ -3,7 +3,9 @@ package edu.sjsu.cs160.team2.netbank.controllers;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,6 +44,21 @@ public class ServiceController {
         return allAccounts;
     }
 
+    @PreAuthorize("hasAuthority('admin')")
+    @GetMapping("/users")
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    @PreAuthorize("hasAuthority('admin')")
+    @GetMapping("/report")
+    public Map<String, Object> generateReport(){
+        Map<String, Object> report = new HashMap<>();
+        report.put("averageAccountBalance", 0);
+        report.put("mostCommonZipCode", 0);
+        return report;
+    }
+
     @GetMapping("/accounts")
     public List<Account> getUserAccounts() {
         String uid = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -73,12 +90,6 @@ public class ServiceController {
             }
         }
         return false;
-    }
-
-    @PreAuthorize("hasAuthority('admin')")
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        return userRepository.findAll();
     }
 
     @GetMapping("/user")
