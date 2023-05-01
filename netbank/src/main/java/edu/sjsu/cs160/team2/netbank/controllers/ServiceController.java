@@ -35,16 +35,23 @@ public class ServiceController {
     private CheckRecordRepository checkRecordRepository;
     
     @PreAuthorize("hasAuthority('admin')")
-    @GetMapping("/accounts")
+    @GetMapping("/allAccounts")
     public List<Account> getAccounts() {
         List<Account> allAccounts = accountRepository.findAll();
         System.out.println("[GET: /api/accounts] Retrieved accounts: " + allAccounts);
         return allAccounts;
     }
+
+    @GetMapping("/accounts")
+    public List<Account> getUserAccounts() {
+        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Account> userAccounts = accountRepository.findAllByUserUid(uid);
+        return userAccounts;
+    }
     
     @PostMapping("/account")
     public Account postAccount(@RequestBody Account account) {
-        User lookupUser = userRepository.findById(account.getUser().getId()).get();
+        User lookupUser = userRepository.findByUid(account.getUser().getUid()).get();
         account.setUser(lookupUser);
         return accountRepository.save(account);
     }
@@ -58,7 +65,8 @@ public class ServiceController {
     @GetMapping("/user")
     public User getUser() {
         String uid = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findById(uid).get();
+        System.out.println("Looking up signed in user id: " + uid);
+        return userRepository.findByUid(uid).get();
     }
 
     @PostMapping("/user")

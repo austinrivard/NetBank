@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './register.css';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../firebase';
 
 function Register() {
   const navigate = useNavigate();
@@ -26,19 +25,28 @@ function Register() {
     }));
   };
 
+  function registerUser(uid) {
+    fetch('/api/user', {
+      method: 'POST',
+      headers: {'Authorization': `Bearer ${getAuth().currentUser.getIdToken()}`},
+      body: JSON.stringify({ uid, ...formData })
+    }).then(response => response.json()
+    ).then(data => {
+      console.log('registerUser response: ', data);
+    }).catch(console.error);
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     // perform registration logic here, e.g. sending the form data to a server
     // if registration is successful, redirect to the dashboard
 
-    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+    createUserWithEmailAndPassword(getAuth(), formData.email, formData.password)
       .then((userCredential) => {
         // Signed in 
-        const user = userCredential.user;
         const uid = userCredential.user.uid;
-        
-        navigate('/dashboard');
-      })
+        registerUser(uid);
+      }).then(navigate('/dashboard'))
       .catch((error) => console.log);
   };
 

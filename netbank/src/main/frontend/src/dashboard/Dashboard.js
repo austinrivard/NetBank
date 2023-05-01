@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './dashboard.css';
 import AccountSummary from '../AccountSummary/AccountSummary';
+import { getAuthUserID, getValidatedUser } from '../firebase';
+import { getAuth } from 'firebase/auth';
 
 const dashboardData = {
   accounts: [
@@ -27,9 +29,31 @@ const dashboardData = {
 };
 
 const Dashboard = () => {
+  getValidatedUser()
+    .then(user => user.getIdToken())
+    .then(token => getAccounts(token));
+  // getAuth().currentUser.getIdToken().then(getAccounts);
+  // getAuthUserID().then(getAccounts());
+
+  function getAccounts(token) {
+    fetch(`/api/accounts`, {
+      headers: {'Authorization': `Bearer ${token}`}
+    }).then(response => response.json()
+    ).then(data => {
+      console.log('getAccounts response: ', data);
+      setAccounts(data);
+    }).catch(console.error);
+  }
+
   const [selectedAccount, setSelectedAccount] = useState(
     dashboardData.accounts[0]
-  );
+    );
+
+  const [accounts, setAccounts] = useState([]);
+  // useEffect(() => {
+  //   getAccounts();
+  // }, []);
+
   const navigate = useNavigate();
 
   const handleAccountSelect = (account) => {
@@ -70,7 +94,7 @@ const Dashboard = () => {
       </nav>
       <div className="account-container">
         <AccountList
-          accounts={dashboardData.accounts}
+          accounts={accounts}
           selectedAccount={selectedAccount}
           onSelect={handleAccountSelect}
         />
