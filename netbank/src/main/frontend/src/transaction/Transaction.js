@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './transaction.css'
+import { getUserToken } from '../firebase';
+import { useNavigate } from 'react-router-dom';
 
 function Text(props) {
   return <span className="text">{props.value}</span>;
@@ -18,9 +20,14 @@ function Transaction(props) {
 function TransactionList(props) {
   return (
     <div className="transaction-list">
-      {props.transactions.map((transaction) => (
-        <Transaction key={transaction.id} transaction={transaction} />
-      ))}
+      {
+        props.tansactions ?
+          props.transactions.map((transaction) => (
+            <Transaction key={transaction.id} transaction={transaction} />
+          ))
+          : <span>No transactions yet...</span>
+          
+      }
     </div>
   );
 }
@@ -35,14 +42,60 @@ function TransactionHistory(props) {
 }
 
 function TransactionHistoryPage(props) {
-  const transactions = [
-    { id: 1, type: 'Payment', amount: 100, date: '2023-04-14' },
-    { id: 2, type: 'Withdrawal', amount: 50, date: '2023-04-13' },
-    { id: 3, type: 'Deposit', amount: 200, date: '2023-04-12' },
-  ];
+  const navigate = useNavigate();
+
+  async function getAccounts() {
+    const token = await getUserToken(() => navigate('/'));
+
+    await fetch(`/api/accounts`, {
+      headers: {'Authorization': `Bearer ${token}`}
+    }).then(response => response.json()
+    ).then(data => {
+      console.log('getAccounts response: ', data);
+      setAccounts(data);
+    }).catch(console.error);
+  }
+
+  const [accounts, setAccounts] = useState([]);
+  useEffect(() => {
+    getAccounts();
+  }, []);
+
+  const [selectedAccount, setSelectedAccount] = useState();
+  useEffect(() => {
+    setSelectedAccount(accounts[0]);
+  }, [accounts]);
+
+  const handleAccountChange = (e) => {
+    setSelectedAccount(e.target.value);
+  };
+
+  async function getTransactions() {
+    const token = await getUserToken(() => navigate('/'));
+
+    fetch(`/api/account/${selectedAccount?.number}/transaction`, {
+      headers: {'Authorization': `Bearer ${token}`}
+    }).then(response => response.json()
+    ).then(data => {
+      console.log('getTransactions response: ', data);
+      setTransactions(data);
+    }).catch(console.error);
+  }
+
+  const [transactions, setTransactions] = useState([]);
+  useEffect(() => {
+    getTransactions();
+  }, [selectedAccount]);
 
   return (
     <div>
+      <label htmlFor="account-number">Select an account:</label>
+      <select id="account-number" name="account-number" onChange={handleAccountChange} required>
+        {/* <option value="">--Please select an account--</option> */}
+        {accounts.map((account) => (
+          <option value={account}>{account.number}</option>
+        ))}
+      </select>
       <TransactionHistory transactions={transactions} />
     </div>
   );
