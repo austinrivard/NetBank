@@ -3,7 +3,9 @@ package edu.sjsu.cs160.team2.netbank.controllers;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +34,9 @@ public class ServiceController {
     private AccountController accountController;
 
     @Autowired
+    private ReportController reportController;
+
+    @Autowired
     private CheckRecordRepository checkRecordRepository;
     
     @PreAuthorize("hasAuthority('admin')")
@@ -40,6 +45,21 @@ public class ServiceController {
         List<Account> allAccounts = accountRepository.findAll();
         System.out.println("[GET: /api/accounts] Retrieved accounts: " + allAccounts);
         return allAccounts;
+    }
+
+    @PreAuthorize("hasAuthority('admin')")
+    @GetMapping("/users")
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    @PreAuthorize("hasAuthority('admin')")
+    @GetMapping("/report")
+    public Map<String, Object> generateReport(){
+        Map<String, Object> report = new HashMap<>();
+        report.put("averageAccountBalance", reportController.calculateAverageAccountBalance());
+        report.put("mostCommonZipCode", reportController.findMostCommonZipCode());
+        return report;
     }
 
     @GetMapping("/accounts")
@@ -73,12 +93,6 @@ public class ServiceController {
             }
         }
         return false;
-    }
-
-    @PreAuthorize("hasAuthority('admin')")
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        return userRepository.findAll();
     }
 
     @GetMapping("/user")
