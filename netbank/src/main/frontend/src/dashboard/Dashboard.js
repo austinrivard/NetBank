@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './dashboard.css';
 import AccountSummary from '../AccountSummary/AccountSummary';
 import { getAuth } from 'firebase/auth';
+import { getUserToken } from '../firebase';
 
 const dashboardData = {
   accounts: [
@@ -29,7 +30,8 @@ const dashboardData = {
 
 const Dashboard = () => {
   async function getAccounts() {
-    const token = await getAuth().currentUser?.getIdToken();
+    const token = await getUserToken(() => navigate('/'));
+
     fetch(`/api/accounts`, {
       headers: {'Authorization': `Bearer ${token}`}
     }).then(response => response.json()
@@ -39,14 +41,15 @@ const Dashboard = () => {
     }).catch(console.error);
   }
 
-  const [selectedAccount, setSelectedAccount] = useState(
-    dashboardData.accounts[0]
-    );
-
   const [accounts, setAccounts] = useState([]);
   useEffect(() => {
     getAccounts();
   }, []);
+
+  const [selectedAccount, setSelectedAccount] = useState();
+  useEffect(() => {
+    setSelectedAccount(accounts[0]);
+  }, [accounts])
 
   const navigate = useNavigate();
 
@@ -64,6 +67,11 @@ const Dashboard = () => {
 
   const handleNewAccountClick = () => {
     navigate('/dashboard/new-account');
+  };
+
+  const handleDelete = () => {
+    setSelectedAccount(null);
+    getAccounts();
   };
 
   return (
@@ -87,12 +95,12 @@ const Dashboard = () => {
         </ul>
       </nav>
       <div className="account-container">
-        <AccountList
+        {accounts && <AccountList
           accounts={accounts}
           selectedAccount={selectedAccount}
           onSelect={handleAccountSelect}
-        />
-        <AccountDetails account={selectedAccount} />
+        />}
+        {selectedAccount && <AccountDetails account={selectedAccount} onDeleted={handleDelete} />}
       </div>
     </div>
   );
@@ -103,14 +111,16 @@ const AccountList = ({ accounts, selectedAccount, onSelect }) => {
     <div className="account-box">
       <ul>
         {accounts.map((account) => (
-          <li key={account.id}>
+          <li key={account.number}>
             <button
               className={`account-button ${
-                account.id === selectedAccount.id ? 'selected' : ''
+                (selectedAccount && account.number === selectedAccount.number) ? 'selected' : ''
               }`}
               onClick={() => onSelect(account)}
             >
-              {account.name}
+              {account.type}<br />
+              Account #: {account.number}<br />
+              Balance: ${account.balance}
             </button>
           </li>
         ))}
@@ -119,7 +129,8 @@ const AccountList = ({ accounts, selectedAccount, onSelect }) => {
   );
 };
 
-const AccountDetails = ({ account }) => {
+const AccountDetails = ({ account, onDeleted }) => {
+  const navigate = useNavigate();
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleConfirmationClick = () => {
@@ -130,17 +141,32 @@ const AccountDetails = ({ account }) => {
     setShowConfirmation(false);
   };
 
-  const handleCloseClick = () => {
+  const handleCloseClick = async () => {
     // TODO: handle account closure
+    await deleteAccount();
     setShowConfirmation(false);
+    onDeleted();
   };
+
+  async function deleteAccount() {
+    const token = await getUserToken(() => navigate('/'));
+
+    await fetch(`/api/account`, {
+      method: 'DELETE',
+      headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+      body: `{"number": ${account.number}}`
+    }).then(response => response.json()
+    ).then(data => {
+      console.log('deleteAccount response: ', data);
+    }).catch(console.error);
+  }
 
   return (
     <div className="account-details">
       <h2>Account Details</h2>
       <div className="account-info">
         <ul>
-          <li><strong>Account Name:</strong> {account.name}</li>
+          <li><strong>Account Type:</strong> {account.type}</li>
           <li><strong>Account Number:</strong> {account.number}</li>
           <li><strong>Balance</strong>{account.balance}</li>
         </ul>

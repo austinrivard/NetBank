@@ -46,14 +46,33 @@ public class ServiceController {
     public List<Account> getUserAccounts() {
         String uid = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Account> userAccounts = accountRepository.findAllByUserUid(uid);
+        System.out.println("[GET: /api/accounts] Retrieved accounts: " + userAccounts);
         return userAccounts;
     }
     
     @PostMapping("/account")
     public Account postAccount(@RequestBody Account account) {
-        User lookupUser = userRepository.findByUid(account.getUser().getUid()).get();
+        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("posting new account with uid: " + uid);
+        User lookupUser = userRepository.findByUid(uid).get();
         account.setUser(lookupUser);
         return accountRepository.save(account);
+    }
+
+    @DeleteMapping("/account")
+    public boolean deleteAccount(@RequestBody Account account) {
+        System.out.print("Delete account: " + account);
+
+        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        for (Account acc : accountRepository.findAllByUserUid(uid)) {
+            System.out.println(acc);
+            if (acc.getNumber().equals(account.getNumber())) {
+                accountRepository.delete(acc);
+                return true;
+            }
+        }
+        return false;
     }
 
     @PreAuthorize("hasAuthority('admin')")

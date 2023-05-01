@@ -19,15 +19,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-export function getValidatedUser() {
-  return new Promise((resolve, reject) => {
-    const unsubscribe = getAuth()
-      .onAuthStateChanged(
-        (user) => {
-          unsubscribe();
-          resolve(user);
-        },
-        reject // pass up any errors attaching the listener
-      );
-  });
-};
+export async function getUserToken(fallback) {
+  const user = getAuth().currentUser;
+  if (!user) fallback();
+  const token = await user.getIdToken();
+  return token;
+}

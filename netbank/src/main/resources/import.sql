@@ -1,3 +1,3 @@
-INSERT INTO "user" ("uid", "ssn", "first_name", "middle_name", "last_name", "street", "city", "state") VALUES ('a7rDO7PMQtgWZuIOFKCqJONznV23', 135135135, 'Frank', null, 'Butt', '123 Main St', 'San Jose', 'CA'),('2', 579579579, 'Mike', null, 'Wu', '30 Rockefeller Ave', 'New York', 'NY');
+INSERT INTO "user" ("uid", "ssn", "first_name", "middle_name", "last_name", "street", "city", "state") VALUES ('a7rDO7PMQtgWZuIOFKCqJONznV23', 135135135, 'Frank', null, 'Butt', '123 Main St', 'San Jose', 'CA'),('b9TX5Eydw2XDjUVPgFtM31fmOyI2', 579579579, 'Mike', null, 'Wu', '30 Rockefeller Ave', 'New York', 'NY');
 
-INSERT INTO "account" ("number", "routing_number", "balance", "user_uid") VALUES (123456789, 420420420, 3.50, 'a7rDO7PMQtgWZuIOFKCqJONznV23'), (123123123, 420420420, 500, '2');
+INSERT INTO "account" ("number", "routing_number", "type", "balance", "user_uid") VALUES (123456789, 420420420, 'checking', 3.50, 'a7rDO7PMQtgWZuIOFKCqJONznV23'), (123123123, 420420420, 'savings', 500, 'b9TX5Eydw2XDjUVPgFtM31fmOyI2');
