@@ -55,20 +55,22 @@ function PaymentPage() {
             <option value="transfer">Transfer</option>
           </select>
         </div>
-        <div>
-          <label htmlFor="amount">Amount:</label>
-          <input type="text" id="amount" value={amount} onChange={handleAmountChange} />
-          <label htmlFor="user-account-number">Your Account Number:</label>
-            <input type="text" id="user-account-number" value={recipientAccountNumber} onChange={handleUserAccountNumberChange} />
-        </div>
         {transactionType === 'withdraw' ? (
           <div>
+            <label htmlFor="amount">Amount:</label>
+            <input type="text" id="amount" value={amount} onChange={handleAmountChange} />
+            <label htmlFor="user-account-number">Your Account Number:</label>
+            <input type="text" id="user-account-number" value={userAccountNumber} onChange={handleUserAccountNumberChange} />            
             <label htmlFor="recipient-account-number">Recipient Account Number:</label>
             <input type="text" id="recipient-account-number" value={recipientAccountNumber} onChange={handleRecipientAccountNumberChange} />
           </div>
         ) : null}
         {transactionType === 'transfer' ? (
           <div>
+            <label htmlFor="amount">Amount:</label>
+            <input type="text" id="amount" value={amount} onChange={handleAmountChange} />
+            <label htmlFor="user-account-number">Your Account Number:</label>
+            <input type="text" id="user-account-number" value={userAccountNumber} onChange={handleUserAccountNumberChange} />
             <label htmlFor="recipient-routing-number">Recipient Routing Number:</label>
             <input type="text" id="recipient-routing-number" value={recipientRoutingNumber} onChange={handleRecipientRoutingNumberChange} />
             <label htmlFor="recipient-account-number">Recipient Account Number:</label>
@@ -77,6 +79,10 @@ function PaymentPage() {
         ) : null}
         {transactionType === 'deposit' ? (
           <div>
+            <label htmlFor="amount">Amount:</label>
+            <input type="text" id="amount" value={amount} onChange={handleAmountChange} />
+            <label htmlFor="user-account-number">Your Account Number:</label>
+            <input type="text" id="user-account-number" value={userAccountNumber} onChange={handleUserAccountNumberChange} />
             <label htmlFor="image1">Image 1:</label>
             <input type="file" id="image1" accept="image/*" onChange={handleImage1Change} />
             {image1 && <img src={URL.createObjectURL(image1)} alt="Image 1" />}
