@@ -30,6 +30,6 @@ public class Account {
     private String type; // checking or savings
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_uid")
     private User user;
 }

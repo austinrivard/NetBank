@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +17,7 @@ import edu.sjsu.cs160.team2.netbank.models.*;
 
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("isAuthenticated()")
 public class ServiceController {
     @Autowired
     private AccountRepository accountRepository;
@@ -31,27 +34,60 @@ public class ServiceController {
     @Autowired
     private CheckRecordRepository checkRecordRepository;
     
-    // TODO: restrict to admins only or only retrieve user's accounts
-    @GetMapping("/account")
+    @PreAuthorize("hasAuthority('admin')")
+    @GetMapping("/allAccounts")
     public List<Account> getAccounts() {
         List<Account> allAccounts = accountRepository.findAll();
         System.out.println("[GET: /api/accounts] Retrieved accounts: " + allAccounts);
         return allAccounts;
     }
+
+    @GetMapping("/accounts")
+    public List<Account> getUserAccounts() {
+        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Account> userAccounts = accountRepository.findAllByUserUid(uid);
+        System.out.println("[GET: /api/accounts] Retrieved accounts: " + userAccounts);
+        return userAccounts;
+    }
     
     @PostMapping("/account")
     public Account postAccount(@RequestBody Account account) {
-        User lookupUser = userRepository.findById(account.getUser().getId()).get();
+        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("posting new account with uid: " + uid);
+        User lookupUser = userRepository.findByUid(uid).get();
         account.setUser(lookupUser);
         return accountRepository.save(account);
     }
 
-    @GetMapping("/user")
+    @DeleteMapping("/account")
+    public boolean deleteAccount(@RequestBody Account account) {
+        System.out.print("Delete account: " + account);
+
+        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        for (Account acc : accountRepository.findAllByUserUid(uid)) {
+            System.out.println(acc);
+            if (acc.getNumber().equals(account.getNumber())) {
+                accountRepository.delete(acc);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @PreAuthorize("hasAuthority('admin')")
+    @GetMapping("/users")
     public List<User> getUsers() {
         return userRepository.findAll();
     }
 
-    // TODO: restrict to admins only
+    @GetMapping("/user")
+    public User getUser() {
+        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("Looking up signed in user id: " + uid);
+        return userRepository.findByUid(uid).get();
+    }
+
     @PostMapping("/user")
     public User postUser(@RequestBody User user) {
         return userRepository.save(user);
@@ -134,4 +170,5 @@ public class ServiceController {
     public byte[] getCheckImageBack(@PathVariable("transactionId") int transactionId) {
         return checkRecordRepository.findByTransactionId(transactionId).get().getImageBack();
     }
+
 }

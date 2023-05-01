@@ -12,8 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private String uid;
 
     private String ssn;
 
@@ -24,11 +23,17 @@ public class User {
 
     private String lastName;
 
-    private String streetAddress;
+    private String email;
+
+    private String phoneNumber;
+
+    private String street;
 
     private String city;
 
     private String state;
+
+    private String zipcode;
 
     @OneToMany(mappedBy = "user")
     private Set<Account> accounts;
