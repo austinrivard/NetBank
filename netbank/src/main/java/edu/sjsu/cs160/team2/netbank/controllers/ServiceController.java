@@ -34,6 +34,9 @@ public class ServiceController {
     private AccountController accountController;
 
     @Autowired
+    private ReportController reportController;
+
+    @Autowired
     private CheckRecordRepository checkRecordRepository;
     
     @PreAuthorize("hasAuthority('admin')")
@@ -54,8 +57,8 @@ public class ServiceController {
     @GetMapping("/report")
     public Map<String, Object> generateReport(){
         Map<String, Object> report = new HashMap<>();
-        report.put("averageAccountBalance", 0);
-        report.put("mostCommonZipCode", 0);
+        report.put("averageAccountBalance", reportController.calculateAverageAccountBalance());
+        report.put("mostCommonZipCode", reportController.findMostCommonZipCode());
         return report;
     }
 
