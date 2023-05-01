@@ -12,7 +12,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String uid;
 
     private String ssn;

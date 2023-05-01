@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './dashboard.css';
 import AccountSummary from '../AccountSummary/AccountSummary';
-import { getAuthUserID, getValidatedUser } from '../firebase';
 import { getAuth } from 'firebase/auth';
 
 const dashboardData = {
@@ -29,13 +28,8 @@ const dashboardData = {
 };
 
 const Dashboard = () => {
-  getValidatedUser()
-    .then(user => user.getIdToken())
-    .then(token => getAccounts(token));
-  // getAuth().currentUser.getIdToken().then(getAccounts);
-  // getAuthUserID().then(getAccounts());
-
-  function getAccounts(token) {
+  async function getAccounts() {
+    const token = await getAuth().currentUser?.getIdToken();
     fetch(`/api/accounts`, {
       headers: {'Authorization': `Bearer ${token}`}
     }).then(response => response.json()
@@ -50,9 +44,9 @@ const Dashboard = () => {
     );
 
   const [accounts, setAccounts] = useState([]);
-  // useEffect(() => {
-  //   getAccounts();
-  // }, []);
+  useEffect(() => {
+    getAccounts();
+  }, []);
 
   const navigate = useNavigate();
 

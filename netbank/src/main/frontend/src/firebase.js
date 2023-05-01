@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,7 +21,7 @@ const app = initializeApp(firebaseConfig);
 
 export function getValidatedUser() {
   return new Promise((resolve, reject) => {
-    const unsubscribe = app.auth
+    const unsubscribe = getAuth()
       .onAuthStateChanged(
         (user) => {
           unsubscribe();
@@ -29,4 +30,4 @@ export function getValidatedUser() {
         reject // pass up any errors attaching the listener
       );
   });
-}
+};

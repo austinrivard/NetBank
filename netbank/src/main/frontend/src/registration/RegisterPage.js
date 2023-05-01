@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './register.css';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getValidatedUser } from '../firebase';
 
 function Register() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function Register() {
     email: '',
     phoneNumber: '',
     ssn: '',
+    password: ''
   });
 
   const handleInputChange = (event) => {
@@ -25,10 +27,11 @@ function Register() {
     }));
   };
 
-  function registerUser(uid) {
+  async function registerUser(uid) {
+    const token = await getAuth().currentUser.getIdToken();
     fetch('/api/user', {
       method: 'POST',
-      headers: {'Authorization': `Bearer ${getAuth().currentUser.getIdToken()}`},
+      headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
       body: JSON.stringify({ uid, ...formData })
     }).then(response => response.json()
     ).then(data => {
@@ -38,8 +41,6 @@ function Register() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // perform registration logic here, e.g. sending the form data to a server
-    // if registration is successful, redirect to the dashboard
 
     createUserWithEmailAndPassword(getAuth(), formData.email, formData.password)
       .then((userCredential) => {
@@ -47,7 +48,7 @@ function Register() {
         const uid = userCredential.user.uid;
         registerUser(uid);
       }).then(navigate('/dashboard'))
-      .catch((error) => console.log);
+      .catch(console.log);
   };
 
   return (
@@ -117,17 +118,6 @@ function Register() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="form-group">
             <label htmlFor="phoneNumber">Phone Number:</label>
             <input
               type="tel"
@@ -145,6 +135,28 @@ function Register() {
               id="ssn"
               name="ssn"
               value={formData.ssn}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
               onChange={handleInputChange}
               required
             />
