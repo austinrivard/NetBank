@@ -27,9 +27,10 @@ function Register() {
     }));
   };
 
-  async function registerUser(uid) {
-    const token = await getAuth().currentUser.getIdToken();
-    fetch('/api/user', {
+  async function registerUser(user) {
+    const token = await user.getIdToken();
+    const uid = user.uid;
+    await fetch('/api/user', {
       method: 'POST',
       headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
       body: JSON.stringify({ uid, ...formData })
@@ -39,16 +40,15 @@ function Register() {
     }).catch(console.error);
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    createUserWithEmailAndPassword(getAuth(), formData.email, formData.password)
+    await createUserWithEmailAndPassword(getAuth(), formData.email, formData.password)
       .then((userCredential) => {
         // Signed in 
-        const uid = userCredential.user.uid;
-        registerUser(uid);
-      }).then(navigate('/dashboard'))
-      .catch(console.log);
+        registerUser(userCredential.user);
+      }).catch(console.log);
+    navigate('/dashboard');
   };
 
   return (
