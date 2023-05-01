@@ -143,7 +143,7 @@ public class ServiceController {
         @RequestPart("imageBack") MultipartFile imageBack
     ) throws IOException {
         if (amount.compareTo(BigDecimal.ZERO) != 1) throw new IllegalArgumentException("Amount must be non-negative");
-        
+        System.out.println("Depositing check to account: " + account);
         account = accountRepository.findById(account.getNumber()).get();
 
         Transaction transaction = accountController.updateBalance(account, amount);

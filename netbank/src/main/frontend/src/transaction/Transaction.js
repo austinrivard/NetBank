@@ -13,6 +13,7 @@ function Transaction(props) {
       <span className="transaction-type">{props.transaction.type}</span>
       <span className="transaction-amount">${props.transaction.amount}</span>
       <span className="transaction-date">{props.transaction.date}</span>
+      <span className="transaction-description">{props.transaction.description}</span>
     </div>
   );
 }
