@@ -16,6 +16,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        http.headers().frameOptions().sameOrigin();
         http.authorizeHttpRequests(
             (requests) -> requests.requestMatchers("/api/**").authenticated()
                                   .requestMatchers("/**").permitAll()
