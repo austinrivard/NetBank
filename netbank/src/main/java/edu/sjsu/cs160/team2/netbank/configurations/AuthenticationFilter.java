@@ -35,7 +35,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
             String uid = decodedToken.getUid();
 
-            if(decodedToken.getEmail().contains("@netbank.com") && ((Boolean) decodedToken.getClaims().get("admin")).equals(false)){
+            if(decodedToken.getEmail().contains("@netbank.com") && (!decodedToken.getClaims().containsKey("admin"))){
                 Map<String, Object> claims = new HashMap<>();
                 claims.put("admin", true);
                 FirebaseAuth.getInstance().setCustomUserClaims(uid, claims);
