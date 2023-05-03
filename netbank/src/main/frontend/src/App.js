@@ -10,7 +10,7 @@ import Transaction from './transaction/Transaction';
 import Statement from './statement/Statement';
 import Open from './open/Open';
 import Map from './maps/MapPage';
-
+import Admin from './ReportAdmin/admin'
 
 import './index.css';
 
@@ -27,6 +27,7 @@ export default function App() {
         <Route path="/dashboard/statements" element={<Statement />} />
         <Route path="/dashboard/new-account" element={<Open />} />
         <Route path="/dashboard/maps" element={<Map />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
