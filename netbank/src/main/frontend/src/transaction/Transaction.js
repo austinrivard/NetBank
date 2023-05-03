@@ -64,7 +64,7 @@ function TransactionHistoryPage(props) {
 
   const [selectedAccount, setSelectedAccount] = useState();
   useEffect(() => {
-    setSelectedAccount(accounts[0]);
+    setSelectedAccount(accounts[0]?.number || null);
   }, [accounts]);
 
   const handleAccountChange = (e) => {
@@ -74,7 +74,7 @@ function TransactionHistoryPage(props) {
   async function getTransactions() {
     const token = await getUserToken(() => navigate('/'));
 
-    fetch(`/api/account/${selectedAccount?.number}/transaction`, {
+    fetch(`/api/account/${selectedAccount}/transaction`, {
       headers: {'Authorization': `Bearer ${token}`}
     }).then(response => response.json()
     ).then(data => {
@@ -94,7 +94,7 @@ function TransactionHistoryPage(props) {
       <select id="account-number" name="account-number" onChange={handleAccountChange} required>
         {/* <option value="">--Please select an account--</option> */}
         {accounts.map((account) => (
-          <option value={account}>{account.number}</option>
+          <option value={account.number}>{account.type} - {account.number}</option>
         ))}
       </select>
       <TransactionHistory transactions={transactions} />

@@ -19,13 +19,14 @@ function PaymentPage() {
     getAccounts();
   }, []);
 
-  const [selectedAccount, setSelectedAccount] = useState();
+  const [selectedAccount, setSelectedAccount] = useState('');
   useEffect(() => {
     setSelectedAccount();
   }, [accounts]);
 
   const handleAccountChange = (e) => {
     setSelectedAccount(e.target.value);
+    console.log(`set selected account to: ${JSON.stringify(e.target.value)}`);
   };
 
   const handleTransactionTypeChange = (e) => {
@@ -67,7 +68,7 @@ function PaymentPage() {
   async function executeWithdrawal() {
     const token = await getUserToken(() => navigate('/'));
 
-    const fromAccount = { "number": selectedAccount.number };
+    const fromAccount = { "number": selectedAccount };
     const toAccount = { "number": "000111222333", "routingNumber": "000111222333" };
     const description = 'Withdraw from ATM';
     const transferArgs = { toAccount, fromAccount, amount, description };
@@ -86,7 +87,7 @@ function PaymentPage() {
   async function executeTransfer() {
     const token = await getUserToken(() => navigate('/'));
 
-    const fromAccount = { "number": selectedAccount.number };
+    const fromAccount = { "number": selectedAccount };
     const toAccount = { "number": recipientAccountNumber, "routingNumber": recipientRoutingNumber };
     const description = 'Withdrawal';
     const transferArgs = { toAccount, fromAccount, amount, description };
@@ -108,10 +109,10 @@ function PaymentPage() {
     const formData = new FormData();
     
     const today = new Date();
-    const accountNumber = selectedAccount.number;
-    console.log(selectedAccount);
+    const account = { "number": selectedAccount };
+    // console.log(JSON.stringify(selectedAccount));
     
-    formData.append("account", `{"number": "${accountNumber}"}`);
+    formData.append("account", JSON.stringify(account));
     formData.append("amount", JSON.stringify(amount));
     formData.append("date", `${today.toISOString().replaceAll("-", "").substring(0, 8)}`);
     formData.append("imageFront", image1);
@@ -151,7 +152,7 @@ function PaymentPage() {
           <select id="user-account" name="user-account" onChange={handleAccountChange} required>
             <option value="">--Please select an account--</option>
             {accounts.map((account) => (
-              <option key={account.number} value={account}>{account.type} - {account.number}</option>
+              <option key={account.number} value={account.number}>{account.type} - {account.number}</option>
             ))}
           </select>          
           {selectedAccount &&
