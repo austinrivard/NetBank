@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 @Builder
@@ -35,8 +37,8 @@ public class User {
 
     private String zipcode;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"user", "transactions"})
+    @ToString.Exclude
     private Set<Account> accounts;
-
-    
 }

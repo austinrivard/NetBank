@@ -1,8 +1,11 @@
 package edu.sjsu.cs160.team2.netbank.models;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 // import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -30,6 +33,12 @@ public class Account {
     private String type; // checking or savings
 
     @ManyToOne
-    @JoinColumn(name = "user_uid")
+    // @JoinColumn(name = "user_uid")
+    @JsonIgnoreProperties("accounts")
     private User user;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("account")
+    @ToString.Exclude
+    private List<Transaction> transactions;
 }

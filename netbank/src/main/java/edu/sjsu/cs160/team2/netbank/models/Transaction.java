@@ -6,6 +6,8 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 @Builder
@@ -28,7 +30,8 @@ public class Transaction {
 
     private BigDecimal balance;
 
-    @ManyToOne
-    @JoinColumn(name = "account_number")
+    @ManyToOne(cascade = CascadeType.ALL)
+    // @JoinColumn(name = "account_number")
+    @JsonIgnoreProperties({"user", "transactions"})
     private Account account;
 }
