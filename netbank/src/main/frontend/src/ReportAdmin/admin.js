@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getUserToken } from '../firebase';
 import { useNavigate } from 'react-router-dom';
+import { getUserToken } from '../firebase';
 
 function AdminView() {
     const navigate = useNavigate();

@@ -20,6 +20,24 @@ function Register() {
     password: ''
   });
 
+  const [ssnValid, isSSNValid] = useState(true);
+
+  function validateSSN(event) {
+    const ssn = event.target.value;
+    const ssnRegex = /^[0-9]{9}$/;
+    isSSNValid(ssnRegex.test(ssn));
+  }
+
+  const [zipValid, isZipValid] = useState(true);
+
+  function validateZip(event) {
+    const zip = event.target.value;
+    const zipRegex = /^[0-9]{5}$/;
+    isZipValid(zipRegex.test(zip));
+  }
+
+
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
@@ -27,6 +45,7 @@ function Register() {
       [name]: value,
     }));
   };
+
   
   async function registerUser(user) {
     const token = await user.getIdToken();
@@ -63,7 +82,6 @@ function Register() {
   return data;
 };
 
-  
 
   return (
     <div className="reg-container">
@@ -128,8 +146,9 @@ function Register() {
               id="zipcode"
               name="zipcode"
               value={formData.middleName}
-              onChange={handleInputChange}
+              onChange={(event) => {validateZip(event); handleInputChange(event);}}
             />
+            {!zipValid && <div className="error">ZipCode should be exactly 5 digits</div>}
           </div>
           <div className="form-group">
             <label htmlFor="phoneNumber">Phone Number:</label>
@@ -149,9 +168,10 @@ function Register() {
               id="ssn"
               name="ssn"
               value={formData.ssn}
-              onChange={handleInputChange}
+              onChange={(event) => {validateSSN(event); handleInputChange(event);}}
               required
             />
+            {!ssnValid && <div className="error">SSN should be exactly 9 digits</div>}
           </div>
           <div className="form-group">
             <label htmlFor="email">Email:</label>
@@ -170,6 +190,7 @@ function Register() {
               type="password"
               id="password"
               name="password"
+              minLength={6}
               value={formData.password}
               onChange={handleInputChange}
               required
