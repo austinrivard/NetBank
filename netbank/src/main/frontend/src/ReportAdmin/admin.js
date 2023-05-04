@@ -7,8 +7,6 @@ function AdminView() {
 
     const [averageBalance, setAverageBalance] = useState(0);
     const [mostCommonZipcode, setMostCommonZipcode] = useState('');
-
-    const navigate = useNavigate();
     
     async function handleRefresh() {
         const token = await getUserToken(() => navigate('/'));

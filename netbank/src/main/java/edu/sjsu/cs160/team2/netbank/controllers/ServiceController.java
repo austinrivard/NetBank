@@ -65,7 +65,6 @@ public class ServiceController {
 
     @GetMapping("/user/role")
     public boolean isAdmin() {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("admin")));
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("admin"));
     }
 
