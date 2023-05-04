@@ -60,6 +60,7 @@ public class ServiceController {
         Map<String, Object> report = new HashMap<>();
         report.put("averageAccountBalance", reportController.calculateAverageAccountBalance());
         report.put("mostCommonZipCode", reportController.findMostCommonZipCode());
+        System.out.println("Generated admin report: " + report);
         return report;
     }
 

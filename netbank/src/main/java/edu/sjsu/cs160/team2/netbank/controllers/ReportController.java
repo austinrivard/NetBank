@@ -24,16 +24,17 @@ public class ReportController {
     
     public double calculateAverageAccountBalance() {
         List<Account> accounts = accountRepository.findAll();
+        if (accounts.isEmpty()) return 0.0;
+
+        System.out.println("All accounts: " + accounts);
+        
         BigDecimal totalBalance = new BigDecimal(0);
-        BigDecimal size = new BigDecimal(0);
         for (Account account : accounts) {
-            totalBalance.add(account.getBalance());
-            size.add(new BigDecimal(1));
+            totalBalance = totalBalance.add(account.getBalance());
         }
-        if(size.doubleValue() == 0){
-            return 0;
-        }
-        return totalBalance.divide(size).doubleValue();
+
+        System.out.println("Total balance: " + totalBalance);
+        return totalBalance.doubleValue() / accounts.size();
     }
     
     public String findMostCommonZipCode() {

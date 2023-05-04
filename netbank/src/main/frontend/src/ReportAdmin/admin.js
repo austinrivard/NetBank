@@ -10,13 +10,13 @@ function AdminView() {
     
     async function handleRefresh() {
         const token = await getUserToken(() => navigate('/'));
-        fetch('/api/report', {headers: {'Authorization': `Bearer ${token}`}})
+        const data = await fetch('/api/report', {headers: {'Authorization': `Bearer ${token}`}})
           .then(response => response.json())
-          .then(data => {
-            setAverageBalance(data.averageAccountBalance);
-            setMostCommonZipcode(data.mostCommonZipcode);
-          })
           .catch(error => console.error(error));
+        
+        console.log(data);
+        setAverageBalance(data.averageAccountBalance);
+        setMostCommonZipcode(data.mostCommonZipCode);
       }
   
     useEffect(() => {
