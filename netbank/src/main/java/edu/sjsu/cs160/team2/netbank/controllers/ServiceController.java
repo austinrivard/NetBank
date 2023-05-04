@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,6 +61,11 @@ public class ServiceController {
         report.put("averageAccountBalance", reportController.calculateAverageAccountBalance());
         report.put("mostCommonZipCode", reportController.findMostCommonZipCode());
         return report;
+    }
+
+    @GetMapping("/user/role")
+    public boolean isAdmin() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("admin"));
     }
 
     @GetMapping("/accounts")
