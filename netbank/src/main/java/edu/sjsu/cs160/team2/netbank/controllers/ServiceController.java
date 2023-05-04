@@ -73,7 +73,7 @@ public class ServiceController {
     public List<Account> getUserAccounts() {
         String uid = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Account> userAccounts = accountRepository.findAllByUserUid(uid);
-        System.out.println("[GET: /api/accounts] Retrieved accounts: " + userAccounts);
+        // System.out.println("[GET: /api/accounts] Retrieved accounts: " + userAccounts);
         return userAccounts;
     }
     
@@ -127,6 +127,8 @@ public class ServiceController {
 
     @PostMapping("/processTransfer")
     public Transaction processTransfer(@RequestBody TransferArgs transferArgs) {
+        System.out.println("[POST: /api/processTransfer] Received transfer request from account: " + transferArgs.fromAccount);
+
         if (!transferArgs.fromAccount.getRoutingNumber().equals("420420420")
             && !transferArgs.toAccount.getRoutingNumber().equals("420420420")) {
             throw new IllegalArgumentException("Neither routing number is ours");
@@ -151,6 +153,8 @@ public class ServiceController {
             transaction = accountController.updateBalance(toAccount, transferArgs.amount);
         }
 
+        transaction.setDate(transferArgs.getDate() == null ? LocalDate.now() : transferArgs.getDate());
+
         transaction.setDescription(transferArgs.description);
         return transactionRepository.save(transaction);
     }
@@ -159,17 +163,19 @@ public class ServiceController {
     public Transaction depositCheck(
         @RequestPart("account") Account account,
         @RequestPart("amount") BigDecimal amount,
-        @RequestPart("date") LocalDate date,
+        @RequestPart(name="date", required=false) LocalDate date,
         @RequestPart("imageFront") MultipartFile imageFront,
         @RequestPart("imageBack") MultipartFile imageBack
     ) throws IOException {
+        System.out.println("[POST: /api/depositCheck] Received deposit of $" + amount + " to: " + account);
+
         if (amount.compareTo(BigDecimal.ZERO) != 1) throw new IllegalArgumentException("Amount must be non-negative");
         System.out.println("Depositing check to account: " + account);
         account = accountRepository.findById(account.getNumber()).get();
 
         Transaction transaction = accountController.updateBalance(account, amount);
         transaction.setDescription("Mobile Check Deposit");
-        transaction.setDate(date);
+        transaction.setDate(date == null ? LocalDate.now() : date);
 
         CheckRecord checkRecord = CheckRecord
             .builder()

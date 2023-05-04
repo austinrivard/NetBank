@@ -3,6 +3,8 @@ import { getUserToken } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 
 function AdminView() {
+    const navigate = useNavigate();
+
     const [averageBalance, setAverageBalance] = useState(0);
     const [mostCommonZipcode, setMostCommonZipcode] = useState('');
 
