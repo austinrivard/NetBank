@@ -8,17 +8,27 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleClick = () => {
-    signInWithEmailAndPassword(getAuth(), email, password)
-      .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        const uid = userCredential.user.uid;
-        
-        // attach bearer token here somehow?
-        navigate('/dashboard');
-      })
-      .catch((error) => console.log);
+  const handleClick = async (event) => {
+    const userCredential = await signInWithEmailAndPassword(getAuth(), email, password)
+    const user = userCredential.user;
+    const uid = userCredential.user.uid;
+    const token = await userCredential.user.getIdToken();
+    const isAdmin = await getUserRole(token);
+    if(isAdmin){
+      navigate('/admin');
+    }else{
+      navigate('/dashboard');
+    }
+      
+  };
+
+  const getUserRole = async (token) => {
+    const response = await fetch('/api/user/role', {
+      method: 'GET',
+      headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+    });
+    const data = await response.json();
+    return data;
   };
 
   return (

@@ -4,6 +4,7 @@ import './register.css';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { getValidatedUser } from '../firebase';
 
+
 function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ function Register() {
       [name]: value,
     }));
   };
-
+  
   async function registerUser(user) {
     const token = await user.getIdToken();
     const uid = user.uid;
@@ -42,14 +43,27 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const userCredential = await createUserWithEmailAndPassword(getAuth(), formData.email, formData.password);
+    registerUser(userCredential.user)
+    const token = await userCredential.user.getIdToken();
+    const isAdmin = await getUserRole(token);
+    if(isAdmin){
+      navigate('/admin');
+    }else{
+      navigate('/dashboard');
+    }
+ };
 
-    await createUserWithEmailAndPassword(getAuth(), formData.email, formData.password)
-      .then((userCredential) => {
-        // Signed in 
-        registerUser(userCredential.user);
-      }).catch(console.log);
-    navigate('/dashboard');
-  };
+ const getUserRole = async (token) => {
+  const response = await fetch('/api/user/role', {
+    method: 'GET',
+    headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+  });
+  const data = await response.json();
+  return data;
+};
+
+  
 
   return (
     <div className="reg-container">
