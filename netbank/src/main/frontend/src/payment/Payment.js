@@ -3,14 +3,18 @@ import './payment.css';
 import { getUserToken } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 function PaymentPage() {
   const navigate = useNavigate();
-  
+  const [startDate, setStartDate] = useState(new Date());
   const [transactionType, setTransactionType] = useState('');
   const [amount, setAmount] = useState('');
   const [recipientRoutingNumber, setRecipientRoutingNumber] = useState('');
   const [recipientAccountNumber, setRecipientAccountNumber] = useState('');
   const [userAccountNumber, setUserAccountNumber] = useState('');
+  const [repeating, setRepeating] = useState(false);
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
 
@@ -76,7 +80,7 @@ function PaymentPage() {
     await fetch(`/api/processTransfer`, {
       method: 'POST',
       headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
-      body: JSON.stringify({ transferArgs })
+      body: JSON.stringify({ ...transferArgs })
     }).then(response => response.json()
     ).then(data => {
       console.log('executeWithdrawal response: ', data);
@@ -89,13 +93,16 @@ function PaymentPage() {
 
     const fromAccount = { "number": selectedAccount };
     const toAccount = { "number": recipientAccountNumber, "routingNumber": recipientRoutingNumber };
-    const description = 'Withdrawal';
-    const transferArgs = { toAccount, fromAccount, amount, description };
+    const description = 'Transfer';
+    let transferArgs = { toAccount, fromAccount, amount, description };
+    if (repeating) transferArgs = { ...transferArgs, startDate };
+
+    console.log(JSON.stringify({...transferArgs}));
 
     await fetch(`/api/processTransfer`, {
       method: 'POST',
       headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
-      body: JSON.stringify({ transferArgs })
+      body: JSON.stringify({ ...transferArgs })
     }).then(response => response.json()
     ).then(data => {
       console.log('executeTransfer response: ', data);
@@ -114,7 +121,7 @@ function PaymentPage() {
     
     formData.append("account", JSON.stringify(account));
     formData.append("amount", JSON.stringify(amount));
-    formData.append("date", `${today.toISOString().replaceAll("-", "").substring(0, 8)}`);
+    // formData.append("date", `${today.toISOString().replaceAll("-", "").substring(0, 8)}`);
     formData.append("imageFront", image1);
     formData.append("imageBack", image2);
     
@@ -184,6 +191,10 @@ function PaymentPage() {
               <input type="text" id="recipient-routing-number" value={recipientRoutingNumber} onChange={handleRecipientRoutingNumberChange} />
               <label htmlFor="recipient-account-number">Recipient Account Number:</label>
               <input type="text" id="recipient-account-number" value={recipientAccountNumber} onChange={handleRecipientAccountNumberChange} />
+              <label htmlFor="repeat-check">Repeating Transfer?</label>
+              <input type="checkbox" id="repeat-check" value={repeating} onChange={() => setRepeating(!repeating)} />
+              <label htmlFor="repeat-on-date">Repeat On Date:</label>
+              <DatePicker id="repeat-on-date" selected={startDate} onChange={(date) => setStartDate(date)} disabled={!repeating} />
             </div>
           ) : null}
           {transactionType === 'deposit' ? (
@@ -193,7 +204,6 @@ function PaymentPage() {
               <label htmlFor="image1">Image 1:</label>
               <input type="file" id="image1" accept="image/*" onChange={handleImage1Change} />
               {image1 && <img src={URL.createObjectURL(image1)} alt="Image 1" />}
-
               <label htmlFor="image2">Image 2:</label>
               <input type="file" id="image2" accept="image/*" onChange={handleImage2Change} />
               {image2 && <img src={URL.createObjectURL(image2)} alt="Image 2" />}
