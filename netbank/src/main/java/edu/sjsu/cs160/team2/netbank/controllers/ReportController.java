@@ -30,6 +30,9 @@ public class ReportController {
             totalBalance.add(account.getBalance());
             size.add(new BigDecimal(1));
         }
+        if(size.doubleValue() == 0){
+            return 0;
+        }
         return totalBalance.divide(size).doubleValue();
     }
     

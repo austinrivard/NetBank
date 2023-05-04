@@ -1,8 +1,10 @@
 package edu.sjsu.cs160.team2.netbank.configurations;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -34,14 +37,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         try {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
             String uid = decodedToken.getUid();
-
-            if(decodedToken.getEmail().contains("@netbank.com") && (!decodedToken.getClaims().containsKey("admin"))){
-                Map<String, Object> claims = new HashMap<>();
-                claims.put("admin", true);
-                FirebaseAuth.getInstance().setCustomUserClaims(uid, claims);
+            
+            Set<SimpleGrantedAuthority> authorities;
+            if(decodedToken.getEmail().contains("@netbank.com")){
+                authorities = Collections.singleton(new SimpleGrantedAuthority("admin"));
+            }else{
+                authorities = null;
             }
-
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(uid, null, null);
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(uid, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (FirebaseAuthException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
