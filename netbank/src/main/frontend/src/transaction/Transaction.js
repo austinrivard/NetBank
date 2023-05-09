@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './transaction.css'
 import { getUserToken } from '../firebase';
 import { useNavigate } from 'react-router-dom';
@@ -7,37 +7,36 @@ function Text(props) {
   return <span className="text">{props.value}</span>;
 }
 
-function Transaction(props) {
+function Transaction({ type, amount, date, description }) {
   return (
     <div className="transaction">
-      <span className="transaction-type">{props.transaction.type}</span>
-      <span className="transaction-amount">${props.transaction.amount}</span>
-      <span className="transaction-date">{props.transaction.date}</span>
-      <span className="transaction-description">{props.transaction.description}</span>
+      <span className="transaction-type">{type}</span>
+      <span className="transaction-amount">${amount}</span>
+      <span className="transaction-date">{date}</span>
+      <span className="transaction-description">{description}</span>
     </div>
   );
 }
 
-function TransactionList(props) {
+function TransactionList({ transactions }) {
   return (
     <div className="transaction-list">
       {
-        props.tansactions ?
-          props.transactions.map((transaction) => (
-            <Transaction key={transaction.id} transaction={transaction} />
+        transactions.length != 0 ?
+          transactions.map((transaction) => (
+            <Transaction {...transaction} />
           ))
           : <span>No transactions yet...</span>
-          
       }
     </div>
   );
 }
 
-function TransactionHistory(props) {
+function TransactionHistory({ transactions }) {
   return (
-    <div className="transaction-history-page">
+    <div className="transaction-history-page" >
       <h1>Transaction History</h1>
-      <TransactionList transactions={props.transactions} />
+      <TransactionList transactions={transactions} />
     </div>
   );
 }
@@ -62,31 +61,33 @@ function TransactionHistoryPage(props) {
     getAccounts();
   }, []);
 
-  const [selectedAccount, setSelectedAccount] = useState();
+  const [selectedAccount, setSelectedAccount] = useState('');
   useEffect(() => {
-    setSelectedAccount(accounts[0]?.number || null);
+    setSelectedAccount(accounts[0]?.number || '');
   }, [accounts]);
 
   const handleAccountChange = (e) => {
     setSelectedAccount(e.target.value);
   };
 
-  async function getTransactions() {
-    const token = await getUserToken(() => navigate('/'));
-
-    fetch(`/api/account/${selectedAccount}/transaction`, {
+  const getTransactions = useCallback(() => {
+    console.log(`getting transactions with selectedAccount: ${selectedAccount}`);
+    if (selectedAccount === undefined || selectedAccount === '') return;
+    // const token = await getUserToken();
+    getUserToken(() => navigate('/')
+    ).then((token) => fetch(`/api/account/${selectedAccount}/transaction`, {
       headers: {'Authorization': `Bearer ${token}`}
-    }).then(response => response.json()
+    })).then(response => response.json()
     ).then(data => {
       console.log('getTransactions response: ', data);
       setTransactions(data);
     }).catch(console.error);
-  }
+  }, [selectedAccount]);
 
   const [transactions, setTransactions] = useState([]);
   useEffect(() => {
     getTransactions();
-  }, [selectedAccount]);
+  }, [getTransactions]);
 
   return (
     <div>

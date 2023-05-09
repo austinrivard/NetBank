@@ -116,7 +116,9 @@ public class ServiceController {
 
     @GetMapping("/account/{accountNumber}/transaction")
     public List<Transaction> getTransactions(@PathVariable String accountNumber) {
-        return transactionRepository.findAllByAccountNumber(accountNumber);
+        List<Transaction> accountTransactions = transactionRepository.findAllByAccountNumber(accountNumber);
+        System.out.println("[GET: /api/account/" + accountNumber + "/transaction] Found transactions: " + accountTransactions);
+        return accountTransactions;
     }
 
     @PostMapping("/account/{accountNumber}/transaction")
