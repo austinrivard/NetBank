@@ -124,7 +124,7 @@ const AccountList = ({ accounts, selectedAccount, onSelect }) => {
             >
               {account.type}<br />
               Account #: {account.number}<br />
-              Balance: ${account.balance}
+              Balance: ${account.balance.toFixed(2)}
             </button>
           </li>
         ))}
@@ -172,7 +172,7 @@ const AccountDetails = ({ account, onDeleted }) => {
         <ul>
           <li><strong>Account Type:</strong> {account.type}</li>
           <li><strong>Account Number:</strong> {account.number}</li>
-          <li><strong>Balance</strong>{account.balance}</li>
+          <li><strong>Balance</strong>{account.balance.toFixed(2)}</li>
         </ul>
       </div>
 

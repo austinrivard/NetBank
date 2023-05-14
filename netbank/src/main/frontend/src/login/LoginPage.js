@@ -7,19 +7,26 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [badLogins, setBadLogins] = useState(false);
 
   const handleClick = async (event) => {
-    const userCredential = await signInWithEmailAndPassword(getAuth(), email, password)
-    const user = userCredential.user;
-    const uid = userCredential.user.uid;
-    const token = await userCredential.user.getIdToken();
-    const isAdmin = await getUserRole(token);
-    if(isAdmin){
-      navigate('/admin');
-    }else{
-      navigate('/dashboard');
-    }
-      
+    await signInWithEmailAndPassword(getAuth(), email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      const uid = userCredential.user.uid;
+      const token = userCredential.user.getIdToken();
+      const isAdmin = getUserRole(token);
+      setBadLogins(false);      
+      if(isAdmin){
+        navigate('/admin');
+      }else{
+        navigate('/dashboard');
+      }
+    })
+    .catch((error) => {
+      setBadLogins(true);
+      console.error(error);
+    });
   };
 
   const getUserRole = async (token) => {
@@ -34,8 +41,9 @@ const Login = () => {
   return (
     <div className="login">
       <div className="login-container">
-        <Input label="Username" name="username" value={email} onChange={setEmail} />
+        <Input label="Email" name="username" value={email} onChange={setEmail} />
         <Input label="Password" type="password" name="password" value={password} onChange={setPassword} />
+        {badLogins && <div className="error">Email or password is wrong</div>}
         <Button label="Login" onClick={handleClick} />
       </div>
     </div>

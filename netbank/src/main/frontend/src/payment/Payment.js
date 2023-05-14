@@ -71,7 +71,7 @@ function PaymentPage() {
 
   async function executeWithdrawal() {
     const token = await getUserToken(() => navigate('/'));
-
+    
     const fromAccount = { "number": selectedAccount };
     const toAccount = { "number": "000111222333", "routingNumber": "000111222333" };
     const description = 'Withdraw from ATM';

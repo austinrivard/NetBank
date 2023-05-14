@@ -36,8 +36,6 @@ function Register() {
     isZipValid(zipRegex.test(zip));
   }
 
-
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
@@ -117,6 +115,7 @@ function Register() {
               name="street"
               value={formData.street}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -127,6 +126,7 @@ function Register() {
               name="city"
               value={formData.city}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -137,6 +137,7 @@ function Register() {
               name="state"
               value={formData.state}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -147,6 +148,7 @@ function Register() {
               name="zipcode"
               value={formData.middleName}
               onChange={(event) => {validateZip(event); handleInputChange(event);}}
+              required
             />
             {!zipValid && <div className="error">ZipCode should be exactly 5 digits</div>}
           </div>
