@@ -18,7 +18,7 @@ const Login = () => {
       const isAdmin = getUserRole(token);
       setBadLogins(false);      
       if(isAdmin){
-        navigate('/admin');
+        navigate('/dashboard');
       }else{
         navigate('/dashboard');
       }

@@ -17,6 +17,10 @@ function PaymentPage() {
   const [repeating, setRepeating] = useState(false);
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
+  const [enoughMoney, setEnoughMoney] = useState(true);
+  const [sameNum, setSameNum] = useState(false);
+  const [sameRoute, setSameRoute] = useState(false);
+
 
   const [accounts, setAccounts] = useState([]);
   useEffect(() => {
@@ -63,15 +67,51 @@ function PaymentPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (transactionType === 'withdraw') await executeWithdrawal();
-    else if (transactionType === 'deposit') await executeDeposit();
-    else if (transactionType === 'transfer') await executeTransfer();
-    navigate('/dashboard');
+    if (transactionType === 'withdraw' && enoughMoney) {
+      await executeWithdrawal();
+      navigate('/dashboard');
+    }
+    else if (transactionType === 'deposit') {
+      await executeDeposit();
+      navigate('/dashboard');
+    }
+    else if (transactionType === 'transfer' && enoughMoney && !(sameNum && sameRoute)) {
+      await executeTransfer();
+      navigate('/dashboard');
+    }
+    
   };
 
+  function checkEnoughMoney(event) {
+    const selected = accounts.find((account) => account.number === selectedAccount);
+    if ((transactionType === 'withdraw' || transactionType === 'transfer') && selected.balance < event.target.value) {
+      setEnoughMoney(false);
+      console.log("Enough money");
+    } else {
+      console.log("Not enough money");
+      setEnoughMoney(true);
+    }
+  }
+
+  function checkSameNum(event) {
+    if (selectedAccount === event.target.value) {
+      setSameNum(true);
+    } else {
+      setSameNum(false);
+    }
+  }
+
+  function checkSameRoute(event) {
+    const selected = accounts.find((account) => account.number === selectedAccount);
+    if (selected.routingNumber === event.target.value) {
+      setSameRoute(true);
+    } else {
+      setSameRoute(false);
+    }
+  }
   async function executeWithdrawal() {
     const token = await getUserToken(() => navigate('/'));
-    
+
     const fromAccount = { "number": selectedAccount };
     const toAccount = { "number": "000111222333", "routingNumber": "000111222333" };
     const description = 'Withdraw from ATM';
@@ -178,19 +218,23 @@ function PaymentPage() {
           {transactionType === 'withdraw' ? (
             <div>
               <label htmlFor="amount">Amount:</label>
-              <input type="text" id="amount" value={amount} onChange={handleAmountChange} />
+              <input type="number" id="amount" min = "0" value={amount} onChange={(event) => {checkEnoughMoney(event); handleAmountChange(event);}} required/>
+              {!enoughMoney && <div className="error">This account does not have enough money</div>}
               <label htmlFor="recipient-account-number">Recipient Account Number:</label>
-              <input type="text" id="recipient-account-number" value={recipientAccountNumber} onChange={handleRecipientAccountNumberChange} />
+              <input type="text" id="recipient-account-number" value={recipientAccountNumber} onChange={handleRecipientAccountNumberChange} required/>
+              
             </div>
           ) : null}
           {transactionType === 'transfer' ? (
             <div>
               <label htmlFor="amount">Amount:</label>
-              <input type="text" id="amount" value={amount} onChange={handleAmountChange} />
+              <input type="number" id="amount" min="0" value={amount} onChange={(event) => {checkEnoughMoney(event); handleAmountChange(event);}} required />
+              {!enoughMoney && <div className="error">This account does not have enough money</div>}
               <label htmlFor="recipient-routing-number">Recipient Routing Number:</label>
-              <input type="text" id="recipient-routing-number" value={recipientRoutingNumber} onChange={handleRecipientRoutingNumberChange} />
+              <input type="text" id="recipient-routing-number" value={recipientRoutingNumber} onChange={(event) => {checkSameRoute(event); handleRecipientRoutingNumberChange(event);}} required/>
               <label htmlFor="recipient-account-number">Recipient Account Number:</label>
-              <input type="text" id="recipient-account-number" value={recipientAccountNumber} onChange={handleRecipientAccountNumberChange} />
+              <input type="text" id="recipient-account-number" value={recipientAccountNumber} onChange={(event) => {checkSameNum(event); handleRecipientAccountNumberChange(event);}} required/>
+              {sameNum && sameRoute && <div className="error">Can't transfer to the same account</div>}
               <label htmlFor="repeat-check">Repeating Transfer?</label>
               <input type="checkbox" id="repeat-check" value={repeating} onChange={() => setRepeating(!repeating)} />
               <label htmlFor="repeat-on-date">Repeat On Date:</label>
@@ -200,12 +244,12 @@ function PaymentPage() {
           {transactionType === 'deposit' ? (
             <div>
               <label htmlFor="amount">Amount:</label>
-              <input type="text" id="amount" value={amount} onChange={handleAmountChange} />
+              <input type="number" id="amount" min="0" value={amount} onChange={handleAmountChange} required/>
               <label htmlFor="image1">Image 1:</label>
-              <input type="file" id="image1" accept="image/*" onChange={handleImage1Change} />
+              <input type="file" id="image1" accept="image/*" onChange={handleImage1Change} required/>
               {image1 && <img src={URL.createObjectURL(image1)} alt="Image 1" />}
               <label htmlFor="image2">Image 2:</label>
-              <input type="file" id="image2" accept="image/*" onChange={handleImage2Change} />
+              <input type="file" id="image2" accept="image/*" onChange={handleImage2Change} required/>
               {image2 && <img src={URL.createObjectURL(image2)} alt="Image 2" />}
             </div>
           ) : null}
