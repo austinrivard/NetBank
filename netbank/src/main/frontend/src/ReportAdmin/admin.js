@@ -26,7 +26,7 @@ function AdminView() {
     return (
       <div>
         <h1>Admin View</h1>
-        <p>Average Balance: ${averageBalance}</p>
+        <p>Average Balance: ${averageBalance.toFixed(2)}</p>
         <p>Most Common Zipcode: {mostCommonZipcode}</p>
         <button onClick={handleRefresh}>Refresh</button>
       </div>

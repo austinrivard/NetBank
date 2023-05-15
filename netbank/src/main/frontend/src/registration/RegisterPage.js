@@ -19,7 +19,7 @@ function Register() {
     ssn: '',
     password: ''
   });
-
+  const [badEmail, setBadEmail] = useState(false);
   const [ssnValid, isSSNValid] = useState(true);
 
   function validateSSN(event) {
@@ -60,15 +60,23 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const userCredential = await createUserWithEmailAndPassword(getAuth(), formData.email, formData.password);
-    registerUser(userCredential.user)
-    const token = await userCredential.user.getIdToken();
-    const isAdmin = await getUserRole(token);
-    if(isAdmin){
-      navigate('/admin');
-    }else{
-      navigate('/dashboard');
+    try {
+      const userCredential = await createUserWithEmailAndPassword(getAuth(), formData.email, formData.password);
+      registerUser(userCredential.user)
+      const token = await userCredential.user.getIdToken();
+      const isAdmin = await getUserRole(token);
+      setBadEmail(false);
+      if(isAdmin){
+        navigate('/admin');
+      }else{
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      setBadEmail(true);
+      console.error(error);
     }
+
+    
  };
 
  const getUserRole = async (token) => {
@@ -185,6 +193,7 @@ function Register() {
               onChange={handleInputChange}
               required
             />
+            {badEmail && <div className="error">Email already in use</div>}
           </div>
           <div className="form-group">
             <label htmlFor="password">Password:</label>
